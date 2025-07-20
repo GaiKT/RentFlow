@@ -1,0 +1,549 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { customToast } from "@/lib/toast";
+import {
+  FileText,
+  ArrowLeft,
+  Save,
+  X,
+  Users,
+  Calendar,
+  DollarSign,
+  Phone,
+  Mail,
+  Building,
+} from "lucide-react";
+
+interface Contract {
+  id: string;
+  tenantName: string;
+  tenantPhone?: string;
+  tenantEmail?: string;
+  startDate: string;
+  endDate: string;
+  rent: number;
+  deposit?: number;
+  status: "ACTIVE" | "EXPIRED" | "TERMINATED" | "PENDING";
+  terms?: string;
+  notes?: string;
+  room: {
+    id: string;
+    name: string;
+    address?: string;
+  };
+}
+
+interface FormData {
+  tenantName: string;
+  tenantPhone: string;
+  tenantEmail: string;
+  startDate: string;
+  endDate: string;
+  rent: string;
+  deposit: string;
+  status: "ACTIVE" | "EXPIRED" | "TERMINATED" | "PENDING";
+  terms: string;
+  notes: string;
+}
+
+const statusOptions = [
+  { value: "ACTIVE", label: "ใช้งาน" },
+  { value: "EXPIRED", label: "หมดอายุ" },
+  { value: "TERMINATED", label: "ยกเลิก" },
+  { value: "PENDING", label: "รอดำเนินการ" },
+];
+
+export default function EditContractPage({ params }: { params: Promise<{ id: string }> }) {
+  const [contract, setContract] = useState<Contract | null>(null);
+  const [formData, setFormData] = useState<FormData>({
+    tenantName: "",
+    tenantPhone: "",
+    tenantEmail: "",
+    startDate: "",
+    endDate: "",
+    rent: "",
+    deposit: "",
+    status: "ACTIVE",
+    terms: "",
+    notes: "",
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [contractId, setContractId] = useState<string>("");
+  
+  const router = useRouter();
+
+  useEffect(() => {
+    const unwrapParams = async () => {
+      const { id } = await params;
+      setContractId(id);
+    };
+    unwrapParams();
+  }, [params]);
+
+  const fetchContract = useCallback(async () => {
+    if (!contractId) return;
+    
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      const response = await fetch(`/api/contracts/${contractId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setContract(data.contract);
+        
+        // Convert dates to YYYY-MM-DD format for input fields
+        const startDate = new Date(data.contract.startDate).toISOString().split('T')[0];
+        const endDate = new Date(data.contract.endDate).toISOString().split('T')[0];
+        
+        setFormData({
+          tenantName: data.contract.tenantName,
+          tenantPhone: data.contract.tenantPhone || "",
+          tenantEmail: data.contract.tenantEmail || "",
+          startDate,
+          endDate,
+          rent: data.contract.rent.toString(),
+          deposit: data.contract.deposit?.toString() || "",
+          status: data.contract.status,
+          terms: data.contract.terms || "",
+          notes: data.contract.notes || "",
+        });
+      } else if (response.status === 404) {
+        customToast.error("ไม่พบข้อมูลสัญญาเช่า");
+        router.push("/dashboard/contracts");
+      } else {
+        customToast.error("เกิดข้อผิดพลาดในการโหลดข้อมูลสัญญาเช่า");
+      }
+    } catch (error) {
+      console.error("Error fetching contract:", error);
+      customToast.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [contractId, router]);
+
+  useEffect(() => {
+    if (contractId) {
+      fetchContract();
+    }
+  }, [fetchContract, contractId]);
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+
+    if (!formData.tenantName.trim()) {
+      newErrors.tenantName = "กรุณากรอกชื่อผู้เช่า";
+    }
+
+    if (!formData.tenantPhone.trim()) {
+      newErrors.tenantPhone = "กรุณากรอกเบอร์โทรศัพท์";
+    }
+
+    if (!formData.tenantEmail.trim()) {
+      newErrors.tenantEmail = "กรุณากรอกอีเมล";
+    } else if (!/\S+@\S+\.\S+/.test(formData.tenantEmail)) {
+      newErrors.tenantEmail = "รูปแบบอีเมลไม่ถูกต้อง";
+    }
+
+    if (!formData.startDate) {
+      newErrors.startDate = "กรุณาเลือกวันที่เริ่มสัญญา";
+    }
+
+    if (!formData.endDate) {
+      newErrors.endDate = "กรุณาเลือกวันที่สิ้นสุดสัญญา";
+    }
+
+    if (formData.startDate && formData.endDate && new Date(formData.startDate) >= new Date(formData.endDate)) {
+      newErrors.endDate = "วันที่สิ้นสุดต้องหลังจากวันที่เริ่มสัญญา";
+    }
+
+    if (!formData.rent || isNaN(Number(formData.rent)) || Number(formData.rent) <= 0) {
+      newErrors.rent = "กรุณากรอกค่าเช่าที่ถูกต้อง";
+    }
+
+    if (formData.deposit && (isNaN(Number(formData.deposit)) || Number(formData.deposit) < 0)) {
+      newErrors.deposit = "กรุณากรอกเงินมัดจำที่ถูกต้อง";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm() || !contractId) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`/api/contracts/${contractId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          tenantName: formData.tenantName.trim(),
+          tenantPhone: formData.tenantPhone.trim() || null,
+          tenantEmail: formData.tenantEmail.trim(),
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          rent: Number(formData.rent),
+          deposit: formData.deposit ? Number(formData.deposit) : null,
+          status: formData.status,
+          terms: formData.terms.trim() || null,
+          notes: formData.notes.trim() || null,
+        }),
+      });
+
+      if (response.ok) {
+        customToast.success("อัปเดตสัญญาเช่าสำเร็จ");
+        router.push(`/dashboard/contracts/${contractId}`);
+      } else {
+        const data = await response.json();
+        if (data.errors) {
+          setErrors(data.errors);
+        } else {
+          customToast.error(data.message || "เกิดข้อผิดพลาดในการอัปเดตสัญญาเช่า");
+        }
+      }
+    } catch {
+      customToast.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="loading loading-spinner loading-lg text-primary"></div>
+          <p className="text-base-content/70">กำลังโหลดข้อมูล...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!contract) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-base-200">
+      {/* Header */}
+      <div className="bg-base-100 shadow-sm border-b border-base-300">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-4">
+            <Link href={contractId ? `/dashboard/contracts/${contractId}` : "/dashboard/contracts"} className="btn btn-ghost btn-circle">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-base-content flex items-center gap-3">
+                <FileText className="w-7 h-7 text-primary" />
+                แก้ไขสัญญาเช่า
+              </h1>
+              <p className="text-base-content/70 mt-1 flex items-center gap-2">
+                <Building className="w-4 h-4" />
+                {contract.room.name} - {contract.tenantName}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Form */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Tenant Information */}
+            <div className="card bg-base-100 shadow-lg">
+              <div className="card-body">
+                <h2 className="card-title text-xl mb-6">
+                  <Users className="w-6 h-6 text-primary" />
+                  ข้อมูลผู้เช่า
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Tenant Name */}
+                  <div className="form-control md:col-span-2">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        ชื่อ-นามสกุล <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      className={`input input-bordered ${errors.tenantName ? 'input-error' : ''}`}
+                      placeholder="ชื่อและนามสกุลของผู้เช่า"
+                      value={formData.tenantName}
+                      onChange={(e) => handleInputChange('tenantName', e.target.value)}
+                    />
+                    {errors.tenantName && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.tenantName}</span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Phone */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        <Phone className="w-4 h-4 inline mr-1" />
+                        เบอร์โทรศัพท์ <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="tel"
+                      className={`input input-bordered ${errors.tenantPhone ? 'input-error' : ''}`}
+                      placeholder="0X-XXXX-XXXX"
+                      value={formData.tenantPhone}
+                      onChange={(e) => handleInputChange('tenantPhone', e.target.value)}
+                    />
+                    {errors.tenantPhone && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.tenantPhone}</span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        <Mail className="w-4 h-4 inline mr-1" />
+                        อีเมล <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="email"
+                      className={`input input-bordered ${errors.tenantEmail ? 'input-error' : ''}`}
+                      placeholder="example@email.com"
+                      value={formData.tenantEmail}
+                      onChange={(e) => handleInputChange('tenantEmail', e.target.value)}
+                    />
+                    {errors.tenantEmail && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.tenantEmail}</span>
+                      </label>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Contract Details */}
+            <div className="card bg-base-100 shadow-lg">
+              <div className="card-body">
+                <h2 className="card-title text-xl mb-6">
+                  <Calendar className="w-6 h-6 text-primary" />
+                  รายละเอียดสัญญา
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Start Date */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        วันที่เริ่มสัญญา <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="date"
+                      className={`input input-bordered ${errors.startDate ? 'input-error' : ''}`}
+                      value={formData.startDate}
+                      onChange={(e) => handleInputChange('startDate', e.target.value)}
+                    />
+                    {errors.startDate && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.startDate}</span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* End Date */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        วันที่สิ้นสุดสัญญา <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="date"
+                      className={`input input-bordered ${errors.endDate ? 'input-error' : ''}`}
+                      value={formData.endDate}
+                      onChange={(e) => handleInputChange('endDate', e.target.value)}
+                    />
+                    {errors.endDate && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.endDate}</span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Status */}
+                  <div className="form-control md:col-span-2">
+                    <label className="label">
+                      <span className="label-text font-medium">สถานะสัญญา</span>
+                    </label>
+                    <select
+                      className="select select-bordered"
+                      value={formData.status}
+                      onChange={(e) => handleInputChange('status', e.target.value)}
+                    >
+                      {statusOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Financial Terms */}
+            <div className="card bg-base-100 shadow-lg">
+              <div className="card-body">
+                <h2 className="card-title text-xl mb-6">
+                  <DollarSign className="w-6 h-6 text-primary" />
+                  เงื่อนไขทางการเงิน
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Rent */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        ค่าเช่าต่อเดือน (บาท) <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      className={`input input-bordered ${errors.rent ? 'input-error' : ''}`}
+                      placeholder="0"
+                      min="0"
+                      value={formData.rent}
+                      onChange={(e) => handleInputChange('rent', e.target.value)}
+                    />
+                    {errors.rent && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.rent}</span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Deposit */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">เงินมัดจำ (บาท)</span>
+                    </label>
+                    <input
+                      type="number"
+                      className={`input input-bordered ${errors.deposit ? 'input-error' : ''}`}
+                      placeholder="0"
+                      min="0"
+                      value={formData.deposit}
+                      onChange={(e) => handleInputChange('deposit', e.target.value)}
+                    />
+                    {errors.deposit && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.deposit}</span>
+                      </label>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Terms */}
+            <div className="card bg-base-100 shadow-lg">
+              <div className="card-body">
+                <h2 className="card-title text-xl mb-6">
+                  <FileText className="w-6 h-6 text-primary" />
+                  เงื่อนไขเพิ่มเติม
+                </h2>
+
+                <div className="space-y-6">
+                  {/* Terms */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">เงื่อนไขสัญญา</span>
+                    </label>
+                    <textarea
+                      className="textarea textarea-bordered h-32"
+                      placeholder="เงื่อนไขและข้อตกลงในสัญญาเช่า เช่น กฎการใช้งาน, ความรับผิดชอบ, การจ่ายค่าสาธารณูปโภค ฯลฯ"
+                      value={formData.terms}
+                      onChange={(e) => handleInputChange('terms', e.target.value)}
+                    />
+                  </div>
+
+                  {/* Notes */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">หมายเหตุ</span>
+                    </label>
+                    <textarea
+                      className="textarea textarea-bordered h-24"
+                      placeholder="หมายเหตุเพิ่มเติม"
+                      value={formData.notes}
+                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="card bg-base-100 shadow-lg">
+              <div className="card-body">
+                <div className="flex flex-col sm:flex-row gap-4 justify-end">
+                  <Link
+                    href={contractId ? `/dashboard/contracts/${contractId}` : "/dashboard/contracts"}
+                    className="btn btn-ghost gap-2"
+                  >
+                    <X className="w-4 h-4" />
+                    ยกเลิก
+                  </Link>
+                  <button
+                    type="submit"
+                    className="btn btn-primary gap-2"
+                    disabled={isSaving}
+                  >
+                    {isSaving && <div className="loading loading-spinner loading-sm"></div>}
+                    <Save className="w-4 h-4" />
+                    บันทึกการเปลี่ยนแปลง
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
