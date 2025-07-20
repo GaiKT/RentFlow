@@ -268,69 +268,60 @@ export default function CreateContractPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Tenant Name */}
-                  <div className="form-control md:col-span-2">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        ชื่อ-นามสกุล <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset className="md:col-span-2">
+                    <legend className="fieldset-legend font-medium">
+                      ชื่อ-นามสกุล <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="text"
-                      className={`input input-bordered ${errors.tenantName ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.tenantName ? 'validator input-error' : 'validator'}`}
                       placeholder="ชื่อและนามสกุลของผู้เช่า"
                       value={formData.tenantName}
                       onChange={(e) => handleInputChange('tenantName', e.target.value)}
+                      required
                     />
                     {errors.tenantName && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.tenantName}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.tenantName}</label>
                     )}
-                  </div>
+                  </fieldset>
 
                   {/* Phone */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        <Phone className="w-4 h-4 inline mr-1" />
-                        เบอร์โทรศัพท์ <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">
+                      <Phone className="w-4 h-4 inline mr-1" />
+                      เบอร์โทรศัพท์ <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="tel"
-                      className={`input input-bordered ${errors.tenantPhone ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.tenantPhone ? 'validator input-error' : 'validator'}`}
                       placeholder="0X-XXXX-XXXX"
                       value={formData.tenantPhone}
                       onChange={(e) => handleInputChange('tenantPhone', e.target.value)}
+                      required
                     />
                     {errors.tenantPhone && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.tenantPhone}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.tenantPhone}</label>
                     )}
-                  </div>
+                  </fieldset>
 
                   {/* Email */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        <Mail className="w-4 h-4 inline mr-1" />
-                        อีเมล <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">
+                      <Mail className="w-4 h-4 inline mr-1" />
+                      อีเมล <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="email"
-                      className={`input input-bordered ${errors.tenantEmail ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.tenantEmail ? 'validator input-error' : 'validator'}`}
                       placeholder="example@email.com"
                       value={formData.tenantEmail}
                       onChange={(e) => handleInputChange('tenantEmail', e.target.value)}
+                      required
                     />
                     {errors.tenantEmail && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.tenantEmail}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.tenantEmail}</label>
                     )}
-                  </div>
+                  </fieldset>
                 </div>
               </div>
             </div>
@@ -345,44 +336,38 @@ export default function CreateContractPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Start Date */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        วันที่เริ่มสัญญา <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">
+                      วันที่เริ่มสัญญา <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="date"
-                      className={`input input-bordered ${errors.startDate ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.startDate ? 'validator input-error' : 'validator'}`}
                       value={formData.startDate}
                       onChange={(e) => handleInputChange('startDate', e.target.value)}
+                      required
                     />
                     {errors.startDate && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.startDate}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.startDate}</label>
                     )}
-                  </div>
+                  </fieldset>
 
                   {/* End Date */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        วันที่สิ้นสุดสัญญา <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">
+                      วันที่สิ้นสุดสัญญา <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="date"
-                      className={`input input-bordered ${errors.endDate ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.endDate ? 'validator input-error' : 'validator'}`}
                       value={formData.endDate}
                       onChange={(e) => handleInputChange('endDate', e.target.value)}
+                      required
                     />
                     {errors.endDate && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.endDate}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.endDate}</label>
                     )}
-                  </div>
+                  </fieldset>
                 </div>
               </div>
             </div>
@@ -397,46 +382,40 @@ export default function CreateContractPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Rent */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        ค่าเช่าต่อเดือน (บาท) <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">
+                      ค่าเช่าต่อเดือน (บาท) <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="number"
-                      className={`input input-bordered ${errors.rent ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.rent ? 'validator input-error' : 'validator'}`}
                       placeholder="0"
                       min="0"
                       value={formData.rent}
                       onChange={(e) => handleInputChange('rent', e.target.value)}
+                      required
                     />
                     {errors.rent && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.rent}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.rent}</label>
                     )}
-                  </div>
+                  </fieldset>
 
                   {/* Deposit */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">เงินมัดจำ (บาท)</span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">เงินมัดจำ (บาท)</legend>
+                    <label className="text-xs text-base-content/70 mb-2 block">ไม่บังคับ</label>
                     <input
                       type="number"
-                      className={`input input-bordered ${errors.deposit ? 'input-error' : ''}`}
+                      className={`input input-bordered w-full ${errors.deposit ? 'validator input-error' : 'validator'}`}
                       placeholder="0"
                       min="0"
                       value={formData.deposit}
                       onChange={(e) => handleInputChange('deposit', e.target.value)}
                     />
                     {errors.deposit && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.deposit}</span>
-                      </label>
+                      <label className="validator-hint text-error text-sm mt-1">{errors.deposit}</label>
                     )}
-                  </div>
+                  </fieldset>
                 </div>
               </div>
             </div>
@@ -451,30 +430,28 @@ export default function CreateContractPage() {
 
                 <div className="space-y-6">
                   {/* Terms */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">เงื่อนไขสัญญา</span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">เงื่อนไขสัญญา</legend>
+                    <label className="text-xs text-base-content/70 mb-2 block">เงื่อนไขและข้อตกลงของสัญญาเช่า</label>
                     <textarea
-                      className="textarea textarea-bordered h-32"
+                      className="textarea textarea-bordered h-32 w-full validator"
                       placeholder="เงื่อนไขและข้อตกลงในสัญญาเช่า เช่น กฎการใช้งาน, ความรับผิดชอบ, การจ่ายค่าสาธารณูปโภค ฯลฯ"
                       value={formData.terms}
                       onChange={(e) => handleInputChange('terms', e.target.value)}
                     />
-                  </div>
+                  </fieldset>
 
                   {/* Notes */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">หมายเหตุ</span>
-                    </label>
+                  <fieldset>
+                    <legend className="fieldset-legend font-medium">หมายเหตุ</legend>
+                    <label className="text-xs text-base-content/70 mb-2 block">ข้อมูลเพิ่มเติมสำหรับการอ้างอิง</label>
                     <textarea
-                      className="textarea textarea-bordered h-24"
+                      className="textarea textarea-bordered h-24 w-full validator"
                       placeholder="หมายเหตุเพิ่มเติม"
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                     />
-                  </div>
+                  </fieldset>
                 </div>
               </div>
             </div>

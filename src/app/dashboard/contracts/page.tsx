@@ -412,7 +412,7 @@ export default function ContractsPage() {
 
               {/* Reset All Filters */}
               {(searchTerm || statusFilter !== "ALL" || sortBy !== "createdAt" || sortOrder !== "desc") && (
-                <div className="form-control">
+                <fieldset>
                   <button
                     className="btn btn-outline"
                     onClick={() => {
@@ -424,7 +424,7 @@ export default function ContractsPage() {
                   >
                     ล้างทั้งหมด
                   </button>
-                </div>
+                </fieldset>
               )}
             </div>
 
