@@ -127,59 +127,51 @@ export default function RegisterPage() {
             {/* Register Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    ชื่อ-นามสกุล
-                  </span>
-                </label>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  ชื่อ-นามสกุล
+                </legend>
                 <input
                   type="text"
                   name="name"
                   placeholder="ชื่อ-นามสกุล"
-                  className="input input-bordered w-full focus:input-primary transition-all duration-300"
+                  className="input input-bordered w-full validator focus:input-primary transition-all duration-300"
                   value={formData.name}
                   onChange={handleChange}
                   required
                 />
-              </div>
+              </fieldset>
 
               {/* Email Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    อีเมล
-                  </span>
-                </label>
-                <div className="relative">
-                    <input
-                    type="email"
-                    name="email"
-                    placeholder="example@email.com"
-                    className="input input-bordered w-full focus:input-primary transition-all duration-300"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    />
-                </div>
-              </div>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  อีเมล
+                </legend>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="example@email.com"
+                  className="input input-bordered w-full validator focus:input-primary transition-all duration-300"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </fieldset>
 
               {/* Password Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    รหัสผ่าน
-                  </span>
-                </label>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  รหัสผ่าน
+                </legend>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)"
-                    className="input input-bordered w-full pr-12 focus:input-primary transition-all duration-300"
+                    className="input input-bordered w-full validator pr-12 focus:input-primary transition-all duration-300"
                     value={formData.password}
                     onChange={handleChange}
                     minLength={6}
@@ -217,22 +209,20 @@ export default function RegisterPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </fieldset>
 
               {/* Confirm Password Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    ยืนยันรหัสผ่าน
-                  </span>
-                </label>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  ยืนยันรหัสผ่าน
+                </legend>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     placeholder="ยืนยันรหัสผ่าน"
-                    className={`input input-bordered w-full pr-12 transition-all duration-300 ${
+                    className={`input input-bordered w-full validator pr-12 transition-all duration-300 ${
                       formData.confirmPassword && formData.password !== formData.confirmPassword
                         ? "input-error"
                         : formData.confirmPassword && formData.password === formData.confirmPassword
@@ -261,16 +251,16 @@ export default function RegisterPage() {
                         รหัสผ่านตรงกัน
                       </div>
                     ) : (
-                      <div className="text-error text-xs">
+                      <label className="validator-hint text-error text-xs">
                         รหัสผ่านไม่ตรงกัน
-                      </div>
+                      </label>
                     )}
                   </div>
                 )}
-              </div>
+              </fieldset>
 
               {/* Register Button */}
-              <div className="form-control mt-8">
+              <div className="mt-8">
                 <button
                   type="submit"
                   className={`btn btn-primary btn-lg w-full bg-gradient-to-r from-secondary to-primary border-none hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}

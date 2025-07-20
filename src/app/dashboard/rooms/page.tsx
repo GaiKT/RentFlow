@@ -317,7 +317,7 @@ export default function RoomsPage() {
 
               {/* Reset All Filters */}
               {(searchTerm || statusFilter !== "ALL" || sortBy !== "name" || sortOrder !== "asc") && (
-                <div className="form-control">
+                <div>
                   <button
                     className="btn btn-outline"
                     onClick={() => {

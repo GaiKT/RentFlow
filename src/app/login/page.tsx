@@ -78,38 +78,32 @@ export default function LoginPage() {
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    อีเมล
-                  </span>
-                </label>
-                <div className="relative">
-                    <input
-                    type="email"
-                    placeholder="example@email.com"
-                    className="input input-bordered w-full focus:input-primary transition-all duration-300"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    />
-                </div>
-              </div>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  อีเมล
+                </legend>
+                <input
+                  type="email"
+                  placeholder="example@email.com"
+                  className="input input-bordered w-full validator focus:input-primary transition-all duration-300"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </fieldset>
 
               {/* Password Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    รหัสผ่าน
-                  </span>
-                </label>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  รหัสผ่าน
+                </legend>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="รหัสผ่าน"
-                    className="input input-bordered w-full pr-12 focus:input-primary transition-all duration-300"
+                    className="input input-bordered w-full validator pr-12 focus:input-primary transition-all duration-300"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -122,10 +116,10 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-              </div>
+              </fieldset>
 
               {/* Login Button */}
-              <div className="form-control mt-8">
+              <div className="mt-8">
                 <button
                   type="submit"
                   className={`btn btn-primary btn-lg w-full bg-gradient-to-r from-primary to-secondary border-none hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}

@@ -254,61 +254,55 @@ export default function ProfilePage() {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Name Field */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        ชื่อ-นามสกุล
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      ชื่อ-นามสกุล
+                    </legend>
                     <input
                       type="text"
                       placeholder="กรอกชื่อ-นามสกุล"
-                      className="input input-bordered focus:input-primary"
+                      className="input input-bordered focus:input-primary validator"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
                       minLength={2}
                     />
-                  </div>
+                  </fieldset>
 
                   {/* Email Field (Read-only) */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        อีเมล
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      อีเมล
+                    </legend>
                     <input
                       type="email"
                       className="input input-bordered bg-base-200 cursor-not-allowed"
                       value={user.email}
                       disabled
                     />
-                    <label className="label">
-                      <span className="label-text-alt text-base-content/60">
+                    <div className="mt-1">
+                      <span className="text-xs text-base-content/60">
                         ไม่สามารถเปลี่ยนอีเมลได้
                       </span>
-                    </label>
-                  </div>
+                    </div>
+                  </fieldset>
 
                   {/* Phone Field */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
-                        เบอร์โทรศัพท์
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      เบอร์โทรศัพท์
+                    </legend>
                     <input
                       type="tel"
                       placeholder="กรอกเบอร์โทรศัพท์ (ไม่บังคับ)"
-                      className="input input-bordered focus:input-primary"
+                      className="input input-bordered focus:input-primary validator"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
-                  </div>
+                  </fieldset>
 
                   {/* Action Buttons */}
                   <div className="flex gap-4 pt-4">

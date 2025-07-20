@@ -234,33 +234,29 @@ export default function EditRoomPage({ params }: { params: Promise<{ id: string 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Room Name */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        ชื่อห้องพัก <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium">
+                      ชื่อห้องพัก <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="text"
-                      className={`input input-bordered ${errors.name ? 'input-error' : ''}`}
+                      className={`input input-bordered validator ${errors.name ? 'input-error' : ''}`}
                       placeholder="เช่น ห้อง 101, ห้องชั้น 2 หลังใหญ่"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                     />
                     {errors.name && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.name}</span>
-                      </label>
+                      <div className="mt-1">
+                        <span className="text-xs text-error">{errors.name}</span>
+                      </div>
                     )}
-                  </div>
+                  </fieldset>
 
                   {/* Status */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">สถานะห้อง</span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium">สถานะห้อง</legend>
                     <select
-                      className="select select-bordered"
+                      className="select select-bordered validator"
                       value={formData.status}
                       onChange={(e) => handleInputChange('status', e.target.value)}
                     >
@@ -270,40 +266,36 @@ export default function EditRoomPage({ params }: { params: Promise<{ id: string 
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </fieldset>
 
                   {/* Address */}
-                  <div className="form-control md:col-span-2">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        <MapPin className="w-4 h-4 inline mr-1" />
-                        ที่อยู่
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2 md:col-span-2">
+                    <legend className="text-sm font-medium">
+                      <MapPin className="w-4 h-4 inline mr-1" />
+                      ที่อยู่
+                    </legend>
                     <input
                       type="text"
-                      className="input input-bordered"
+                      className="input input-bordered validator"
                       placeholder="ที่อยู่ของห้องพัก"
                       value={formData.address}
                       onChange={(e) => handleInputChange('address', e.target.value)}
                     />
-                  </div>
+                  </fieldset>
 
                   {/* Description */}
-                  <div className="form-control md:col-span-2">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        <FileText className="w-4 h-4 inline mr-1" />
-                        คำอธิบาย
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2 md:col-span-2">
+                    <legend className="text-sm font-medium">
+                      <FileText className="w-4 h-4 inline mr-1" />
+                      คำอธิบาย
+                    </legend>
                     <textarea
-                      className="textarea textarea-bordered h-24"
+                      className="textarea textarea-bordered h-24 validator"
                       placeholder="คำอธิบายเพิ่มเติมเกี่ยวกับห้องพัก"
                       value={formData.description}
                       onChange={(e) => handleInputChange('description', e.target.value)}
                     />
-                  </div>
+                  </fieldset>
                 </div>
               </div>
             </div>
@@ -318,46 +310,42 @@ export default function EditRoomPage({ params }: { params: Promise<{ id: string 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Rent */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        ค่าเช่าต่อเดือน (บาท) <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium">
+                      ค่าเช่าต่อเดือน (บาท) <span className="text-error">*</span>
+                    </legend>
                     <input
                       type="number"
-                      className={`input input-bordered ${errors.rent ? 'input-error' : ''}`}
+                      className={`input input-bordered validator ${errors.rent ? 'input-error' : ''}`}
                       placeholder="0"
                       min="0"
                       value={formData.rent}
                       onChange={(e) => handleInputChange('rent', e.target.value)}
                     />
                     {errors.rent && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.rent}</span>
-                      </label>
+                      <div className="mt-1">
+                        <span className="text-xs text-error">{errors.rent}</span>
+                      </div>
                     )}
-                  </div>
+                  </fieldset>
 
                   {/* Deposit */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">เงินมัดจำ (บาท)</span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium">เงินมัดจำ (บาท)</legend>
                     <input
                       type="number"
-                      className={`input input-bordered ${errors.deposit ? 'input-error' : ''}`}
+                      className={`input input-bordered validator ${errors.deposit ? 'input-error' : ''}`}
                       placeholder="0"
                       min="0"
                       value={formData.deposit}
                       onChange={(e) => handleInputChange('deposit', e.target.value)}
                     />
                     {errors.deposit && (
-                      <label className="label">
-                        <span className="label-text-alt text-error">{errors.deposit}</span>
-                      </label>
+                      <div className="mt-1">
+                        <span className="text-xs text-error">{errors.deposit}</span>
+                      </div>
                     )}
-                  </div>
+                  </fieldset>
                 </div>
               </div>
             </div>

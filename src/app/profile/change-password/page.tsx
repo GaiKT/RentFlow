@@ -127,18 +127,16 @@ export default function ChangePasswordPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Current Password */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    รหัสผ่านปัจจุบัน
-                  </span>
-                </label>
+              <fieldset>
+                <legend className="fieldset-legend font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  รหัสผ่านปัจจุบัน
+                </legend>
                 <div className="relative">
                   <input
                     type={showCurrentPassword ? "text" : "password"}
                     placeholder="กรอกรหัสผ่านปัจจุบัน"
-                    className="input input-bordered w-full pr-12 focus:input-primary"
+                    className="input input-bordered w-full validator pr-12 focus:input-primary"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     required
@@ -151,21 +149,19 @@ export default function ChangePasswordPage() {
                     {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-              </div>
+              </fieldset>
 
               {/* New Password */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    รหัสผ่านใหม่
-                  </span>
-                </label>
+              <fieldset className="space-y-2">
+                <legend className="text-sm font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  รหัสผ่านใหม่
+                </legend>
                 <div className="relative">
                   <input
                     type={showNewPassword ? "text" : "password"}
                     placeholder="กรอกรหัสผ่านใหม่"
-                    className="input input-bordered w-full pr-12 focus:input-primary"
+                    className="input input-bordered w-full pr-12 focus:input-primary validator"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
@@ -201,21 +197,19 @@ export default function ChangePasswordPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </fieldset>
 
               {/* Confirm Password */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    ยืนยันรหัสผ่านใหม่
-                  </span>
-                </label>
+              <fieldset className="space-y-2">
+                <legend className="text-sm font-medium flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  ยืนยันรหัสผ่านใหม่
+                </legend>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="กรอกรหัสผ่านใหม่อีกครั้ง"
-                    className={`input input-bordered w-full pr-12 focus:input-primary ${
+                    className={`input input-bordered w-full pr-12 focus:input-primary validator ${
                       confirmPassword && newPassword !== confirmPassword ? 'input-error' : ''
                     }`}
                     value={confirmPassword}
@@ -233,24 +227,24 @@ export default function ChangePasswordPage() {
                 
                 {/* Password Match Indicator */}
                 {confirmPassword && (
-                  <label className="label">
+                  <div className="mt-1">
                     {newPassword === confirmPassword ? (
-                      <span className="label-text-alt text-success flex items-center gap-1">
+                      <span className="text-xs text-success flex items-center gap-1">
                         <Check className="w-3 h-3" />
                         รหัสผ่านตรงกัน
                       </span>
                     ) : (
-                      <span className="label-text-alt text-error flex items-center gap-1">
+                      <span className="text-xs text-error flex items-center gap-1">
                         <X className="w-3 h-3" />
                         รหัสผ่านไม่ตรงกัน
                       </span>
                     )}
-                  </label>
+                  </div>
                 )}
-              </div>
+              </fieldset>
 
               {/* Submit Button */}
-              <div className="form-control pt-4">
+              <div className="pt-4">
                 <button
                   type="submit"
                   className="btn btn-primary btn-lg w-full"

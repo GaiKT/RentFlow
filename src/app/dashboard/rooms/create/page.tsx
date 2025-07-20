@@ -119,69 +119,61 @@ export default function CreateRoomPage() {
             <div className="card-body">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Room Name */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      <Home className="w-4 h-4 inline mr-2" />
-                      ชื่อห้องพัก <span className="text-error">*</span>
-                    </span>
-                  </label>
+                <fieldset className="space-y-2">
+                  <legend className="text-sm font-medium">
+                    <Home className="w-4 h-4 inline mr-2" />
+                    ชื่อห้องพัก <span className="text-error">*</span>
+                  </legend>
                   <input
                     type="text"
                     name="name"
                     placeholder="เช่น ห้อง 101, ห้องพักชั้น 2 หน้า, อพาร์ทเมนต์ A"
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full validator"
                     value={formData.name}
                     onChange={handleChange}
                     required
                   />
-                </div>
+                </fieldset>
 
                 {/* Address */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      <MapPin className="w-4 h-4 inline mr-2" />
-                      ที่อยู่
-                    </span>
-                  </label>
+                <fieldset className="space-y-2">
+                  <legend className="text-sm font-medium">
+                    <MapPin className="w-4 h-4 inline mr-2" />
+                    ที่อยู่
+                  </legend>
                   <input
                     type="text"
                     name="address"
                     placeholder="ที่อยู่ของห้องพัก"
-                    className="input input-bordered w-full"
+                    className="input input-bordered w-full validator"
                     value={formData.address}
                     onChange={handleChange}
                   />
-                </div>
+                </fieldset>
 
                 {/* Description */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      <FileText className="w-4 h-4 inline mr-2" />
-                      คำอธิบาย
-                    </span>
-                  </label>
+                <fieldset className="space-y-2">
+                  <legend className="text-sm font-medium">
+                    <FileText className="w-4 h-4 inline mr-2" />
+                    คำอธิบาย
+                  </legend>
                   <textarea
                     name="description"
                     placeholder="รายละเอียดเพิ่มเติมเกี่ยวกับห้องพัก เช่น ขนาด, สิ่งอำนวยความสะดวก"
-                    className="textarea textarea-bordered w-full h-24"
+                    className="textarea textarea-bordered w-full h-24 validator"
                     value={formData.description}
                     onChange={handleChange}
                   />
-                </div>
+                </fieldset>
 
                 {/* Rent and Deposit */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Rent */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        <DollarSign className="w-4 h-4 inline mr-2" />
-                        ค่าเช่าต่อเดือน <span className="text-error">*</span>
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium">
+                      <DollarSign className="w-4 h-4 inline mr-2" />
+                      ค่าเช่าต่อเดือน <span className="text-error">*</span>
+                    </legend>
                     <div className="input-group">
                       <input
                         type="number"
@@ -189,23 +181,21 @@ export default function CreateRoomPage() {
                         placeholder="0"
                         min="0"
                         step="0.01"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full validator"
                         value={formData.rent}
                         onChange={handleChange}
                         required
                       />
                       <span className="bg-base-300 text-base-content">บาท</span>
                     </div>
-                  </div>
+                  </fieldset>
 
                   {/* Deposit */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text font-medium">
-                        <DollarSign className="w-4 h-4 inline mr-2" />
-                        เงินมัดจำ
-                      </span>
-                    </label>
+                  <fieldset className="space-y-2">
+                    <legend className="text-sm font-medium">
+                      <DollarSign className="w-4 h-4 inline mr-2" />
+                      เงินมัดจำ
+                    </legend>
                     <div className="input-group">
                       <input
                         type="number"
@@ -213,13 +203,13 @@ export default function CreateRoomPage() {
                         placeholder="0"
                         min="0"
                         step="0.01"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full validator"
                         value={formData.deposit}
                         onChange={handleChange}
                       />
                       <span className="bg-base-300 text-base-content">บาท</span>
                     </div>
-                  </div>
+                  </fieldset>
                 </div>
 
                 {/* Info Alert */}
