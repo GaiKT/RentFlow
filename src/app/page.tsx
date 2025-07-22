@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Building, FileText, Receipt, Bell, Star, Shield, Clock, Users } from "lucide-react";
+import ThemeSwitcher from "@/components/theme-switcher";
 
 export default function Home() {
   const features = [
@@ -58,6 +59,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="navbar-end gap-2">
+          <ThemeSwitcher />
           <Link href="/login" className="btn btn-primary">
             เข้าสู่ระบบ
           </Link>

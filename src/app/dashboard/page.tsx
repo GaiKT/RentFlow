@@ -4,9 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { customToast } from "@/lib/toast";
-import { Navbar } from "@/components/Navbar";
 import { QuickStats, ActivityCard } from "@/components/StatCards";
 import { RevenueChart, RoomStatusChart, PaymentTrendChart } from "@/components/Charts";
+import TestNotificationsPanel from "@/components/TestNotificationsPanel";
 
 interface User {
   id: string;
@@ -134,22 +134,18 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-200">
-      <Navbar user={user} onLogout={handleLogout} notificationCount={3} />
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-                ยินดีต้อนรับ, {user.name}
-              </h1>
-              <p className="text-base-content/70 text-lg">
-                ภาพรวมการจัดการห้องพักของคุณในวันนี้
-              </p>
-            </div>
+    <div className="container mx-auto px-4 py-8">
+      {/* Welcome Section */}
+      <div className="mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+              ยินดีต้อนรับ, {user.name}
+            </h1>
+            <p className="text-base-content/70 text-lg">
+              ภาพรวมการจัดการห้องพักของคุณในวันนี้
+            </p>
+          </div>
             <div className="mt-4 lg:mt-0">
               <div className="text-sm text-base-content/60">
                 อัปเดตล่าสุด: {new Date().toLocaleString("th-TH")}
@@ -242,7 +238,9 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Test Notifications Panel */}
+        <TestNotificationsPanel />
       </div>
-    </div>
   );
 }

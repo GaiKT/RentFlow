@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
+import { notifyContractCreated, notifyRoomStatusChanged } from "@/lib/notification-service";
 
 const prisma = new PrismaClient();
 
@@ -201,6 +202,24 @@ export async function POST(request: NextRequest) {
     await prisma.room.update({
       where: { id: roomId },
       data: { status: "OCCUPIED" },
+    });
+
+    // สร้างการแจ้งเตือน
+    await notifyContractCreated({
+      roomName: contract.room.name,
+      tenantName: contract.tenantName,
+      rent: contract.rent,
+      startDate: contract.startDate,
+      endDate: contract.endDate,
+      ownerId: payload.userId,
+    });
+
+    // แจ้งเตือนการเปลี่ยนสถานะห้อง
+    await notifyRoomStatusChanged({
+      roomName: contract.room.name,
+      oldStatus: 'AVAILABLE',
+      newStatus: 'OCCUPIED',
+      ownerId: payload.userId,
     });
 
     return NextResponse.json({ contract }, { status: 201 });

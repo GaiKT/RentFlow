@@ -22,7 +22,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Check for include query parameter
+    const { searchParams } = new URL(req.url);
+    const includeContracts = searchParams.get('include') === 'contracts';
+
     const rooms = await prisma.room.findMany({
+      where: {
+        ownerId: decoded.userId,
+      },
       include: {
         owner: {
           select: {
@@ -31,7 +38,18 @@ export async function GET(req: NextRequest) {
             email: true,
           },
         },
-        contracts: {
+        contracts: includeContracts ? {
+          select: {
+            id: true,
+            tenantName: true,
+            tenantPhone: true,
+            tenantEmail: true,
+            rent: true,
+            status: true,
+            startDate: true,
+            endDate: true,
+          },
+        } : {
           where: {
             status: "ACTIVE",
           },

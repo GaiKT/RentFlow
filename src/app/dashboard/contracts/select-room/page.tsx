@@ -121,9 +121,6 @@ export default function SelectRoomPage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-200">
-      <Navbar user={user} onLogout={handleLogout} notificationCount={3} />
-      
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
@@ -169,7 +166,7 @@ export default function SelectRoomPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {rooms.map((room) => (
               <div key={room.id} className="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-                <div className="card-body">
+                <div className="card-body flex flex-col justify-between">
                   {/* Header */}
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
@@ -260,6 +257,5 @@ export default function SelectRoomPage() {
           </div>
         </div>
       </div>
-    </div>
   );
 }

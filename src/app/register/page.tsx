@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { customToast } from "@/lib/toast";
 import { Eye, EyeOff, UserPlus, Mail, Lock, User, ArrowLeft, CheckCircle } from "lucide-react";
+import ThemeSwitcher from "@/components/theme-switcher";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -95,6 +96,11 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-300 to-base-200 flex items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] opacity-20"></div>
+      
+      {/* Theme Switcher - Top Right */}
+      <div className="absolute top-4 right-4">
+        <ThemeSwitcher />
+      </div>
       
       <div className="relative w-full max-w-md">
         {/* Back Button */}
