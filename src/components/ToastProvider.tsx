@@ -8,7 +8,7 @@ export function ToastProvider() {
       position="top-right"
       gutter={8}
       containerClassName=""
-      containerStyle={{}}
+      containerStyle={{ zIndex: 9000 }}
       toastOptions={{
         // Default options for all toasts
         duration: 4000,

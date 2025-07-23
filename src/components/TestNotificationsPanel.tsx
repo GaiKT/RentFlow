@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface TestNotificationsPanelProps {
   onRefresh?: () => void;
@@ -7,15 +8,16 @@ interface TestNotificationsPanelProps {
 
 export default function TestNotificationsPanel({ onRefresh }: TestNotificationsPanelProps) {
   const [loading, setLoading] = useState(false);
+  const [token, , isClient] = useLocalStorage('token');
 
   const handleCreateTestNotifications = async (type: string = 'all') => {
+    if (!isClient || !token) {
+      toast.error('กรุณาเข้าสู่ระบบก่อน');
+      return;
+    }
+    
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error('กรุณาเข้าสู่ระบบก่อน');
-        return;
-      }
 
       const response = await fetch('/api/notifications/test', {
         method: 'POST',
@@ -48,6 +50,18 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
     }
   };
 
+  // Don't render until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div className="bg-base-100 p-6 rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold mb-4 text-primary">🧪 ทดสอบระบบแจ้งเตือน</h3>
+        <div className="flex justify-center items-center h-32">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-base-100 p-6 rounded-lg shadow-md">
       <h3 className="text-lg font-semibold mb-4 text-primary">🧪 ทดสอบระบบแจ้งเตือน</h3>
@@ -55,7 +69,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <button
           onClick={() => handleCreateTestNotifications('all')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-primary btn-sm"
         >
           {loading ? (
@@ -70,7 +84,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('PAYMENT_RECEIVED')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-success btn-sm"
         >
           💰 ได้รับชำระเงิน
@@ -78,7 +92,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('INVOICE_CREATED')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-info btn-sm"
         >
           📄 สร้างใบแจ้งหนี้
@@ -86,7 +100,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('CONTRACT_CREATED')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-secondary btn-sm"
         >
           📝 สร้างสัญญา
@@ -94,7 +108,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('CONTRACT_EXPIRY')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-warning btn-sm"
         >
           ⏰ สัญญาใกล้หมดอายุ
@@ -102,7 +116,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('RENT_DUE')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-accent btn-sm"
         >
           💸 ใกล้ครบกำหนด
@@ -110,7 +124,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('INVOICE_OVERDUE')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-error btn-sm"
         >
           ⚠️ เลยกำหนด
@@ -118,7 +132,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('MAINTENANCE')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-neutral btn-sm"
         >
           🔧 แจ้งซ่อม
@@ -126,7 +140,7 @@ export default function TestNotificationsPanel({ onRefresh }: TestNotificationsP
 
         <button
           onClick={() => handleCreateTestNotifications('MONTHLY_REPORT')}
-          disabled={loading}
+          disabled={loading || !isClient}
           className="btn btn-ghost btn-sm"
         >
           📊 รายงาน

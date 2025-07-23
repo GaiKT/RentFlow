@@ -1,0 +1,26 @@
+/* Notification dropdown with highest z-index */
+.notification-dropdown {
+  z-index: 10000 !important;
+  position: relative;
+}
+
+.notification-dropdown .dropdown-content {
+  z-index: 10000 !important;
+  position: fixed !important;
+}
+
+/* Ensure notifications appear above modals, toasts, and all other components */
+.notification-dropdown-content {
+  z-index: 10000 !important;
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  transform: translateY(8px) !important;
+}
+
+/* Override any conflicting z-index from other components */
+.notification-dropdown,
+.notification-dropdown .dropdown-content,
+.notification-dropdown-content {
+  z-index: 10000 !important;
+}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession } from '@/lib/auth-context';
 import { Bell, Check, X, Calendar, DollarSign, FileText, Home, AlertTriangle } from 'lucide-react';
 import { NotificationTypeLabels } from '@/lib/notification-service';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface Notification {
   id: string;
@@ -20,13 +21,13 @@ export default function NotificationDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [token, , isClient] = useLocalStorage('token');
 
   // ดึงข้อมูลการแจ้งเตือน
   const fetchNotifications = async () => {
-    if (!session?.user) return;
+    if (!session?.user || !isClient || !token) return;
 
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch('/api/notifications', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -45,8 +46,9 @@ export default function NotificationDropdown() {
 
   // อ่านการแจ้งเตือน
   const markAsRead = async (notificationId: string) => {
+    if (!isClient || !token) return;
+    
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch('/api/notifications', {
         method: 'PUT',
         headers: {
@@ -74,9 +76,10 @@ export default function NotificationDropdown() {
 
   // อ่านทั้งหมด
   const markAllAsRead = async () => {
+    if (!isClient || !token) return;
+    
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
       const unreadIds = notifications.filter(n => !n.read).map(n => n.id);
       
       if (unreadIds.length === 0) return;
@@ -108,8 +111,9 @@ export default function NotificationDropdown() {
 
   // ลบการแจ้งเตือน
   const deleteNotification = async (notificationId: string) => {
+    if (!isClient || !token) return;
+    
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch('/api/notifications', {
         method: 'DELETE',
         headers: {
@@ -136,13 +140,15 @@ export default function NotificationDropdown() {
   // โหลดข้อมูลเมื่อเริ่มต้น
   useEffect(() => {
     fetchNotifications();
-  }, [session?.user]);
+  }, [session?.user, isClient, token]);
 
   // รีเฟรชทุก 30 วินาที
   useEffect(() => {
+    if (!isClient || !token) return;
+    
     const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
-  }, [session?.user]);
+  }, [session?.user, isClient, token]);
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -196,8 +202,23 @@ export default function NotificationDropdown() {
 
   if (!session?.user) return null;
 
+  // Show loading state during hydration
+  if (!isClient) {
+    return (
+      <div className="dropdown dropdown-end">
+        <div 
+          tabIndex={0} 
+          role="button" 
+          className="btn btn-ghost btn-circle relative"
+        >
+          <Bell className="h-5 w-5" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-end relative" style={{ zIndex: 10000 }}>
       <div 
         tabIndex={0} 
         role="button" 
@@ -213,7 +234,14 @@ export default function NotificationDropdown() {
       
       <div 
         tabIndex={0}
-        className="dropdown-content z-50 card card-compact w-96 p-0 shadow-xl bg-base-100 border border-base-300"
+        className="dropdown-content card card-compact w-96 p-0 shadow-xl bg-base-100 border border-base-300"
+        style={{ 
+          zIndex: 10000,
+          position: 'absolute',
+          top: '100%',
+          right: 0,
+          transform: 'translateY(8px)'
+        }}
       >
         <div className="card-body p-0">
           {/* Header */}
