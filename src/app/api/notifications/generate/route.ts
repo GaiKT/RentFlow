@@ -34,13 +34,13 @@ export async function POST(request: NextRequest) {
       let notificationType: 'RENT_DUE' = 'RENT_DUE';
 
       if (daysUntilDue <= 1) {
-        notificationTitle = '⚠️ ครบกำหนดชำระค่าเช่าวันนี้!';
+        notificationTitle = 'ครบกำหนดชำระค่าเช่าวันนี้!';
         notificationMessage = `ใบแจ้งหนี้ ${invoice.invoiceNo} ของห้อง ${invoice.room.name} ครบกำหนดชำระวันนี้ จำนวน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(invoice.amount)}`;
       } else if (daysUntilDue <= 7) {
-        notificationTitle = '📅 ใกล้ครบกำหนดชำระค่าเช่า';
+        notificationTitle = 'ใกล้ครบกำหนดชำระค่าเช่า';
         notificationMessage = `ใบแจ้งหนี้ ${invoice.invoiceNo} ของห้อง ${invoice.room.name} จะครบกำหนดชำระในอีก ${daysUntilDue} วัน จำนวน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(invoice.amount)}`;
       } else if (daysUntilDue <= 30) {
-        notificationTitle = '📋 แจ้งเตือนค่าเช่าล่วงหน้า';
+        notificationTitle = 'แจ้งเตือนค่าเช่าล่วงหน้า';
         notificationMessage = `ใบแจ้งหนี้ ${invoice.invoiceNo} ของห้อง ${invoice.room.name} จะครบกำหนดชำระในอีก ${daysUntilDue} วัน`;
       }
 
@@ -96,13 +96,13 @@ export async function POST(request: NextRequest) {
       let notificationType: 'CONTRACT_EXPIRY' = 'CONTRACT_EXPIRY';
 
       if (daysUntilExpiry <= 1) {
-        notificationTitle = '⚠️ สัญญาเช่าหมดอายุวันนี้!';
+        notificationTitle = 'สัญญาเช่าหมดอายุวันนี้!';
         notificationMessage = `สัญญาเช่าของห้อง ${contract.room.name} (ผู้เช่า: ${contract.tenantName}) จะหมดอายุวันนี้`;
       } else if (daysUntilExpiry <= 7) {
-        notificationTitle = '📋 สัญญาเช่าใกล้หมดอายุ';
+        notificationTitle = 'สัญญาเช่าใกล้หมดอายุ';
         notificationMessage = `สัญญาเช่าของห้อง ${contract.room.name} (ผู้เช่า: ${contract.tenantName}) จะหมดอายุในอีก ${daysUntilExpiry} วัน`;
       } else if (daysUntilExpiry <= 30) {
-        notificationTitle = '📅 แจ้งเตือนสัญญาเช่าล่วงหน้า';
+        notificationTitle = 'แจ้งเตือนสัญญาเช่าล่วงหน้า';
         notificationMessage = `สัญญาเช่าของห้อง ${contract.room.name} (ผู้เช่า: ${contract.tenantName}) จะหมดอายุในอีก ${daysUntilExpiry} วัน`;
       }
 

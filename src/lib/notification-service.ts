@@ -119,7 +119,7 @@ export async function notifyPaymentReceived(receiptData: {
   ownerId: string;
 }): Promise<void> {
   const notification: NotificationData = {
-    title: '💰 ได้รับชำระเงินแล้ว',
+    title: 'ได้รับชำระเงินแล้ว',
     message: `ได้รับชำระเงิน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(receiptData.amount)} จากห้อง ${receiptData.roomName}${receiptData.tenantName ? ` (${receiptData.tenantName})` : ''} ใบเสร็จ #${receiptData.receiptNo}`,
     type: NotificationType.PAYMENT_RECEIVED,
     userId: receiptData.ownerId
@@ -146,7 +146,7 @@ export async function notifyInvoiceCreated(invoiceData: {
   });
 
   const notification: NotificationData = {
-    title: '📄 สร้างใบแจ้งหนี้ใหม่',
+    title: 'สร้างใบแจ้งหนี้ใหม่',
     message: `สร้างใบแจ้งหนี้ #${invoiceData.invoiceNo} จำนวน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(invoiceData.amount)} สำหรับห้อง ${invoiceData.roomName}${invoiceData.tenantName ? ` (${invoiceData.tenantName})` : ''} ครบกำหนดชำระ ${dueDateStr}`,
     type: NotificationType.INVOICE_CREATED,
     userId: invoiceData.ownerId
@@ -170,7 +170,7 @@ export async function notifyContractCreated(contractData: {
   const endDateStr = contractData.endDate.toLocaleDateString('th-TH');
 
   const notification: NotificationData = {
-    title: '📝 สร้างสัญญาเช่าใหม่',
+    title: 'สร้างสัญญาเช่าใหม่',
     message: `สร้างสัญญาเช่าห้อง ${contractData.roomName} กับ ${contractData.tenantName} ค่าเช่า ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(contractData.rent)}/เดือน ระยะเวลา ${startDateStr} - ${endDateStr}`,
     type: NotificationType.CONTRACT_CREATED,
     userId: contractData.ownerId
@@ -192,7 +192,7 @@ export async function notifyContractTerminated(contractData: {
   const endDateStr = contractData.endDate.toLocaleDateString('th-TH');
 
   const notification: NotificationData = {
-    title: '❌ สิ้นสุดสัญญาเช่า',
+    title: 'สิ้นสุดสัญญาเช่า',
     message: `สัญญาเช่าห้อง ${contractData.roomName} กับ ${contractData.tenantName} สิ้นสุดแล้ว (${endDateStr})${contractData.reason ? ` เหตุผล: ${contractData.reason}` : ''}`,
     type: NotificationType.CONTRACT_TERMINATED,
     userId: contractData.ownerId
@@ -216,7 +216,7 @@ export async function notifyInvoiceOverdue(invoiceData: {
   const dueDateStr = invoiceData.dueDate.toLocaleDateString('th-TH');
 
   const notification: NotificationData = {
-    title: '⚠️ ใบแจ้งหนี้เลยกำหนด',
+    title: 'ใบแจ้งหนี้เลยกำหนด',
     message: `ใบแจ้งหนี้ #${invoiceData.invoiceNo} ห้อง ${invoiceData.roomName}${invoiceData.tenantName ? ` (${invoiceData.tenantName})` : ''} เลยกำหนดชำระแล้ว ${invoiceData.daysPastDue} วัน (กำหนดชำระ: ${dueDateStr}) จำนวน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(invoiceData.amount)}`,
     type: NotificationType.INVOICE_OVERDUE,
     userId: invoiceData.ownerId
@@ -242,7 +242,7 @@ export async function notifyRoomStatusChanged(roomData: {
   };
 
   const notification: NotificationData = {
-    title: '🏠 เปลี่ยนสถานะห้อง',
+    title: 'เปลี่ยนสถานะห้อง',
     message: `ห้อง ${roomData.roomName} เปลี่ยนสถานะจาก "${statusLabels[roomData.oldStatus] || roomData.oldStatus}" เป็น "${statusLabels[roomData.newStatus] || roomData.newStatus}"`,
     type: NotificationType.ROOM_STATUS_CHANGED,
     userId: roomData.ownerId
@@ -341,7 +341,7 @@ export async function createMonthlyReport(userId: string): Promise<void> {
     const revenue = totalRevenue._sum.amount || 0;
 
     const notification: NotificationData = {
-      title: '📊 รายงานประจำเดือน',
+      title: 'รายงานประจำเดือน',
       message: `รายงาน ${monthName}: รายรับ ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(revenue)} | ใบแจ้งหนี้ ${totalInvoices} ใบ | ใบเสร็จ ${totalReceipts} ใบ${overdueInvoices > 0 ? ` | เลยกำหนด ${overdueInvoices} ใบ` : ''}`,
       type: NotificationType.MONTHLY_REPORT,
       userId: userId
@@ -413,7 +413,7 @@ export async function generateReminderNotifications(): Promise<void> {
       contracts.forEach((contract) => {
         const endDateStr = contract.endDate.toLocaleDateString('th-TH');
         notifications.push({
-          title: `📋 สัญญาใกล้หมดอายุ (${days} วัน)`,
+          title: `สัญญาใกล้หมดอายุ (${days} วัน)`,
           message: `สัญญาเช่าห้อง ${contract.room.name} กับ ${contract.tenantName} จะหมดอายุในอีก ${days} วัน (${endDateStr})`,
           type: NotificationType.CONTRACT_EXPIRY,
           userId: contract.owner.id
@@ -475,7 +475,7 @@ export async function generateReminderNotifications(): Promise<void> {
       invoices.forEach((invoice) => {
         const dueDateStr = invoice.dueDate.toLocaleDateString('th-TH');
         notifications.push({
-          title: `💰 ใกล้ครบกำหนดชำระ (${days} วัน)`,
+          title: `ใกล้ครบกำหนดชำระ (${days} วัน)`,
           message: `ใบแจ้งหนี้ #${invoice.invoiceNo} ห้อง ${invoice.room.name}${invoice.contract?.tenantName ? ` (${invoice.contract.tenantName})` : ''} ครบกำหนดชำระในอีก ${days} วัน (${dueDateStr}) จำนวน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(invoice.amount)}`,
           type: NotificationType.RENT_DUE,
           userId: invoice.owner.id
@@ -503,7 +503,7 @@ export async function generateReminderNotifications(): Promise<void> {
       const daysPastDue = Math.floor((now.getTime() - invoice.dueDate.getTime()) / (1000 * 60 * 60 * 24));
       if (daysPastDue > 0) {
         notifications.push({
-          title: '⚠️ ใบแจ้งหนี้เลยกำหนด',
+          title: 'ใบแจ้งหนี้เลยกำหนด',
           message: `ใบแจ้งหนี้ #${invoice.invoiceNo} ห้อง ${invoice.room.name}${invoice.contract?.tenantName ? ` (${invoice.contract.tenantName})` : ''} เลยกำหนดชำระแล้ว ${daysPastDue} วัน จำนวน ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(invoice.amount)}`,
           type: NotificationType.INVOICE_OVERDUE,
           userId: invoice.owner.id

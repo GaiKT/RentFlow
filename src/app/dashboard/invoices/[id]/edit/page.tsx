@@ -4,13 +4,19 @@ import { useState, useEffect, use } from 'react';
 import { useSession } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { customToast } from '@/lib/toast';
 import { 
   ArrowLeft, 
   Save,
   Calendar,
   DollarSign,
   FileText,
-  AlertTriangle
+  AlertTriangle,
+  Home,
+  User,
+  Clock,
+  Edit3,
+  Info
 } from 'lucide-react';
 
 interface Invoice {
@@ -155,15 +161,16 @@ export default function EditInvoicePage({ params }: { params: Promise<{ id: stri
       }
 
       if (response.ok) {
+        customToast.success('บันทึกการแก้ไขเรียบร้อยแล้ว');
         router.push(`/dashboard/invoices/${invoiceId}`);
       } else {
         const errorData = await response.json();
         console.error('Failed to update invoice:', errorData);
-        alert('เกิดข้อผิดพลาดในการบันทึก');
+        customToast.error(`เกิดข้อผิดพลาดในการบันทึก: ${errorData.error || 'ไม่ทราบสาเหตุ'}`);
       }
     } catch (error) {
       console.error('Error updating invoice:', error);
-      alert('เกิดข้อผิดพลาดในการบันทึก');
+      customToast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
     } finally {
       setSaving(false);
     }
@@ -174,6 +181,14 @@ export default function EditInvoicePage({ params }: { params: Promise<{ id: stri
       style: 'currency',
       currency: 'THB'
     }).format(amount);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('th-TH', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   if (!session) {
@@ -230,170 +245,236 @@ export default function EditInvoicePage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link href={`/dashboard/invoices/${invoiceId}`} className="btn btn-ghost btn-sm">
-          <ArrowLeft className="w-4 h-4" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">แก้ไขใบแจ้งหนี้ #{invoice.invoiceNo}</h1>
-          <p className="text-base-content/70">
-            ห้อง: {invoice.room.name} | ค่าเช่าปกติ: {formatCurrency(invoice.room.rent)}
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-base-200/50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* Form */}
+          <div className="xl:col-span-2">
+            <div className="card bg-base-100 shadow-xl border border-base-300">
+              <div className="card-body">
+                <h2 className="card-title text-xl mb-6 text-primary">
+                  <FileText className="w-6 h-6" />
+                  แก้ไขรายละเอียดใบแจ้งหนี้
+                </h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Form */}
-        <div className="lg:col-span-2">
-          <div className="card bg-base-100 shadow-lg">
-            <div className="card-body">
-              <h2 className="card-title text-xl mb-6">
-                <FileText className="w-6 h-6 text-primary" />
-                รายละเอียดใบแจ้งหนี้
-              </h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Amount */}
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-semibold text-base">
+                          <DollarSign className="w-4 h-4 inline mr-2 text-success" />
+                          จำนวนเงิน
+                        </span>
+                        <span className="label-text-alt text-error">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          className={`input input-bordered w-full pr-12 ${errors.amount ? 'input-error' : 'focus:input-primary'}`}
+                          value={formData.amount}
+                          onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                          placeholder="0.00"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/60 text-sm">
+                          บาท
+                        </span>
+                      </div>
+                      {errors.amount && (
+                        <label className="label">
+                          <span className="label-text-alt text-error flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            {errors.amount}
+                          </span>
+                        </label>
+                      )}
+                    </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Amount */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      <DollarSign className="w-4 h-4 inline mr-2" />
-                      จำนวนเงิน (บาท)
-                    </span>
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    className={`input input-bordered ${errors.amount ? 'input-error' : ''}`}
-                    value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    placeholder="0.00"
-                  />
-                  {errors.amount && (
+                    {/* Due Date */}
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-semibold text-base">
+                          <Calendar className="w-4 h-4 inline mr-2 text-warning" />
+                          วันครบกำหนดชำระ
+                        </span>
+                        <span className="label-text-alt text-error">*</span>
+                      </label>
+                      <input
+                        type="date"
+                        className={`input input-bordered w-full ${errors.dueDate ? 'input-error' : 'focus:input-primary'}`}
+                        value={formData.dueDate}
+                        onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                      />
+                      {errors.dueDate && (
+                        <label className="label">
+                          <span className="label-text-alt text-error flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            {errors.dueDate}
+                          </span>
+                        </label>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="form-control flex flex-col">
                     <label className="label">
-                      <span className="label-text-alt text-error">{errors.amount}</span>
+                      <span className="label-text font-semibold text-base">
+                        <FileText className="w-4 h-4 inline mr-2 text-info" />
+                        รายละเอียด
+                      </span>
+                      <span className="label-text-alt text-error">*</span>
                     </label>
-                  )}
-                </div>
-
-                {/* Due Date */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      <Calendar className="w-4 h-4 inline mr-2" />
-                      วันครบกำหนดชำระ
-                    </span>
-                  </label>
-                  <input
-                    type="date"
-                    className={`input input-bordered ${errors.dueDate ? 'input-error' : ''}`}
-                    value={formData.dueDate}
-                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                  />
-                  {errors.dueDate && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.dueDate}</span>
-                    </label>
-                  )}
-                </div>
-
-                {/* Description */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-medium">
-                      <FileText className="w-4 h-4 inline mr-2" />
-                      รายละเอียด
-                    </span>
-                  </label>
-                  <textarea
-                    className={`textarea textarea-bordered h-32 ${errors.description ? 'textarea-error' : ''}`}
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="ระบุรายละเอียดใบแจ้งหนี้..."
-                  />
-                  {errors.description && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.description}</span>
-                    </label>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex gap-4 pt-4">
-                  <button
-                    type="submit"
-                    className="btn btn-primary flex-1"
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <>
-                        <span className="loading loading-spinner loading-sm"></span>
-                        กำลังบันทึก...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4" />
-                        บันทึกการแก้ไข
-                      </>
+                    <textarea
+                      className={`textarea textarea-bordered h-32 resize-none ${errors.description ? 'textarea-error' : 'focus:textarea-primary'}`}
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="ระบุรายละเอียดใบแจ้งหนี้... เช่น ค่าเช่าประจำเดือน กรกฎาคม 2025"
+                    />
+                    {errors.description && (
+                      <label className="label">
+                        <span className="label-text-alt text-error flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          {errors.description}
+                        </span>
+                      </label>
                     )}
-                  </button>
-                  <Link href={`/dashboard/invoices/${invoiceId}`} className="btn btn-outline">
-                    ยกเลิก
-                  </Link>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+                  </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Current Values */}
-          <div className="card bg-base-100 shadow-lg">
-            <div className="card-body">
-              <h3 className="card-title text-lg mb-4">ข้อมูลปัจจุบัน</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="label">
-                    <span className="label-text font-medium">จำนวนเงินเดิม</span>
-                  </label>
-                  <div className="text-lg font-semibold text-primary">
-                    {formatCurrency(invoice.amount)}
+                  {/* Action Buttons */}
+                  <div className="divider"></div>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                      type="submit"
+                      className="btn btn-primary flex-1 shadow-lg"
+                      disabled={saving}
+                    >
+                      {saving ? (
+                        <>
+                          <span className="loading loading-spinner loading-sm"></span>
+                          กำลังบันทึก...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-5 h-5" />
+                          บันทึกการแก้ไข
+                        </>
+                      )}
+                    </button>
+                    <Link href={`/dashboard/invoices/${invoiceId}`} className="btn btn-outline flex-1">
+                      <ArrowLeft className="w-4 h-4" />
+                      ยกเลิก
+                    </Link>
                   </div>
-                </div>
-                
-                <div>
-                  <label className="label">
-                    <span className="label-text font-medium">วันครบกำหนดเดิม</span>
-                  </label>
-                  <div className="text-sm">
-                    {new Date(invoice.dueDate).toLocaleDateString('th-TH', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>
 
-          {/* Warning */}
-          <div className="card bg-warning/10 border border-warning/20 shadow-lg">
-            <div className="card-body">
-              <h3 className="card-title text-lg mb-4 text-warning">
-                <AlertTriangle className="w-5 h-5" />
-                ข้อควรระวัง
-              </h3>
-              
-              <div className="space-y-2 text-sm">
-                <p>• การแก้ไขใบแจ้งหนี้จะมีผลทันที</p>
-                <p>• ไม่สามารถแก้ไขใบแจ้งหนี้ที่ชำระแล้วหรือยกเลิกแล้ว</p>
-                <p>• ควรตรวจสอบข้อมูลให้ถูกต้องก่อนบันทึก</p>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Current Values */}
+            <div className="card bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 shadow-xl">
+              <div className="card-body">
+                <h3 className="card-title text-lg mb-4 text-primary">
+                  <Info className="w-5 h-5" />
+                  ข้อมูลปัจจุบัน
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="bg-base-100 p-4 rounded-lg border">
+                    <label className="label p-0 pb-2">
+                      <span className="label-text font-semibold text-sm opacity-70">จำนวนเงินเดิม</span>
+                    </label>
+                    <div className="text-2xl font-bold text-success flex items-center gap-2">
+                      <DollarSign className="w-5 h-5" />
+                      {formatCurrency(invoice.amount)}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-base-100 p-4 rounded-lg border">
+                    <label className="label p-0 pb-2">
+                      <span className="label-text font-semibold text-sm opacity-70">วันครบกำหนดเดิม</span>
+                    </label>
+                    <div className="flex items-center gap-2 text-base font-semibold">
+                      <Calendar className="w-4 h-4 text-warning" />
+                      {formatDate(invoice.dueDate)}
+                    </div>
+                  </div>
+
+                  <div className="bg-base-100 p-4 rounded-lg border">
+                    <label className="label p-0 pb-2 mr-3">
+                      <span className="label-text font-semibold text-sm opacity-70">สถานะ</span>
+                    </label>
+                    <div className="badge badge-warning gap-2">
+                      <Clock className="w-3 h-3" />
+                      รอชำระ
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Warning */}
+            <div className="card bg-gradient-to-br from-warning/10 to-warning/5 border border-warning/30 shadow-xl">
+              <div className="card-body">
+                <h3 className="card-title text-lg mb-4 text-warning">
+                  <AlertTriangle className="w-5 h-5" />
+                  ข้อควรระวัง
+                </h3>
+                
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3 text-sm">
+                    <div className="w-2 h-2 rounded-full bg-warning mt-2 flex-shrink-0"></div>
+                    <p>การแก้ไขใบแจ้งหนี้จะมีผลทันทีหลังจากบันทึก</p>
+                  </div>
+                  <div className="flex items-start gap-3 text-sm">
+                    <div className="w-2 h-2 rounded-full bg-warning mt-2 flex-shrink-0"></div>
+                    <p>ไม่สามารถแก้ไขใบแจ้งหนี้ที่ชำระแล้วหรือยกเลิกแล้ว</p>
+                  </div>
+                  <div className="flex items-start gap-3 text-sm">
+                    <div className="w-2 h-2 rounded-full bg-warning mt-2 flex-shrink-0"></div>
+                    <p>ควรตรวจสอบข้อมูลให้ถูกต้องก่อนบันทึก</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="card bg-base-100 shadow-xl border border-base-300">
+              <div className="card-body">
+                <h3 className="card-title text-lg mb-4">
+                  <Edit3 className="w-5 h-5 text-primary" />
+                  การดำเนินการ
+                </h3>
+                
+                <div className="space-y-2">
+                  <Link 
+                    href={`/dashboard/invoices/${invoiceId}`}
+                    className="btn btn-ghost btn-sm w-full justify-start"
+                  >
+                    <FileText className="w-4 h-4" />
+                    ดูรายละเอียดใบแจ้งหนี้
+                  </Link>
+                  
+                  <Link 
+                    href={`/dashboard/rooms/${invoice.room.id}`}
+                    className="btn btn-ghost btn-sm w-full justify-start"
+                  >
+                    <Home className="w-4 h-4" />
+                    ดูข้อมูลห้องพัก
+                  </Link>
+                  
+                  <Link 
+                    href="/dashboard/invoices"
+                    className="btn btn-ghost btn-sm w-full justify-start"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    กลับไปรายการใบแจ้งหนี้
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

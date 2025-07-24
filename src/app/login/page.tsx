@@ -44,130 +44,134 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-300 to-base-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 flex items-center justify-center p-4">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] opacity-20"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       
       {/* Theme Switcher - Top Right */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-6 right-6">
         <ThemeSwitcher />
       </div>
       
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-lg">
         {/* Back Button */}
         <Link 
           href="/" 
-          className="btn btn-ghost btn-sm mb-4 text-base-content/70 hover:text-base-content"
+          className="btn btn-ghost btn-sm mb-6 text-base-content/70 hover:text-base-content group"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
           กลับสู่หน้าหลัก
         </Link>
 
         {/* Login Card */}
-        <div className="card bg-base-100 shadow-2xl border border-base-300">
+        <div className="card bg-base-100/80 backdrop-blur-sm shadow-2xl border border-base-300/50">
           <div className="card-body p-8">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="avatar mb-4">
-                <div className="w-16 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center">
-                  <LogIn className="w-8 h-8" />
-                </div>
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg">
+                <LogIn className="w-10 h-10 text-white" />
               </div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                เข้าสู่ระบบ
-              </h2>
-              <p className="text-base-content/70 mt-2">
-                ยินดีต้อนรับกลับสู่ระบบจัดการห้องพัก
+              <h1 className="text-4xl font-bold mb-2">
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  เข้าสู่ระบบ
+                </span>
+              </h1>
+              <p className="text-base-content/60 text-lg">
+                ยินดีต้อนรับกลับสู่ RentFlow
               </p>
             </div>
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
-              <fieldset>
-                <legend className="fieldset-legend font-medium flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  อีเมล
-                </legend>
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-primary" />
+                    อีเมล
+                  </span>
+                </label>
                 <input
                   type="email"
-                  placeholder="example@email.com"
-                  className="input input-bordered w-full validator focus:input-primary transition-all duration-300"
+                  placeholder="กรอกอีเมลของคุณ"
+                  className="input input-bordered w-full focus:input-primary transition-all duration-300 bg-base-200/50"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-              </fieldset>
+              </div>
 
               {/* Password Field */}
-              <fieldset>
-                <legend className="fieldset-legend font-medium flex items-center gap-2">
-                  <Lock className="w-4 h-4" />
-                  รหัสผ่าน
-                </legend>
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-primary" />
+                    รหัสผ่าน
+                  </span>
+                </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="รหัสผ่าน"
-                    className="input input-bordered w-full validator pr-12 focus:input-primary transition-all duration-300"
+                    placeholder="กรอกรหัสผ่านของคุณ"
+                    className="input input-bordered w-full pr-12 focus:input-primary transition-all duration-300 bg-base-200/50"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-base-content/50 hover:text-base-content transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/50 hover:text-primary transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-              </fieldset>
+              </div>
 
               {/* Login Button */}
-              <div className="mt-8">
-                <button
-                  type="submit"
-                  className={`btn btn-primary btn-lg w-full bg-gradient-to-r from-primary to-secondary border-none hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <span className="loading loading-spinner w-5 h-5"></span>
-                      กำลังเข้าสู่ระบบ...
-                    </>
-                  ) : (
-                    <>
-                      <LogIn className="w-5 h-5 mr-2" />
-                      เข้าสู่ระบบ
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                className={`btn btn-primary btn-lg w-full mt-8 bg-gradient-to-r from-primary to-secondary border-none hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5`}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="loading loading-spinner loading-xs"></span>
+                    กำลังเข้าสู่ระบบ...
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-5 h-5 mr-2" />
+                    เข้าสู่ระบบ
+                  </>
+                )}
+              </button>
             </form>
 
             {/* Divider */}
-            <div className="divider my-8 text-base-content/50">หรือ</div>
+            <div className="divider my-8">
+              <span className="text-base-content/40 text-sm">หรือ</span>
+            </div>
 
             {/* Footer Links */}
             <div className="text-center space-y-4">
-              <p className="text-sm text-base-content/70">
+              <p className="text-base-content/70">
                 ยังไม่มีบัญชี?{" "}
-                <Link href="/register" className="link link-primary font-medium hover:link-hover">
+                <Link href="/register" className="link link-primary font-semibold hover:link-hover">
                   สมัครสมาชิก
                 </Link>
               </p>
-              <Link href="/" className="link link-secondary text-sm hover:link-hover">
-                กลับสู่หน้าหลัก
-              </Link>
             </div>
           </div>
         </div>
 
         {/* Demo Info */}
-        <div className="mt-6 p-4 bg-info/10 rounded-lg border border-info/20">
-          <div className="text-center text-sm text-info">
-            <strong>Demo:</strong> สามารถสมัครบัญชีใหม่หรือใช้บัญชีที่สร้างไว้แล้ว
+        <div className="mt-6 p-4 bg-gradient-to-r from-info/10 to-accent/10 rounded-xl border border-info/20 backdrop-blur-sm">
+          <div className="text-center text-sm">
+            <div className="badge badge-info badge-sm mb-2">DEMO</div>
+            <p className="text-base-content/70">
+              สามารถสมัครบัญชีใหม่หรือใช้บัญชีที่สร้างไว้แล้ว
+            </p>
           </div>
         </div>
       </div>

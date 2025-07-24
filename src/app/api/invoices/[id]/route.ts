@@ -111,7 +111,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { status, amount, dueDate, description } = body;
+    const { status, amount, dueDate, description, paymentMethod, paymentNotes } = body;
 
     // Await params before using in Next.js 15
     const { id } = await params;
@@ -145,6 +145,51 @@ export async function PATCH(
     
     if (description !== undefined) {
       updateData.description = description;
+    }
+
+    // If status is being changed to PAID, create a receipt automatically
+    let newReceipt = null;
+    if (status === 'PAID' && existingInvoice.status !== 'PAID') {
+      // Generate receipt number
+      const year = new Date().getFullYear();
+      const month = String(new Date().getMonth() + 1).padStart(2, '0');
+
+      const latestReceipt = await prisma.receipt.findFirst({
+        where: {
+          ownerId: payload.userId,
+          receiptNo: {
+            startsWith: `REC-${year}${month}`,
+          },
+        },
+        orderBy: {
+          receiptNo: 'desc',
+        },
+      });
+
+      let sequence = 1;
+      if (latestReceipt) {
+        const lastSequence = parseInt(latestReceipt.receiptNo.split('-')[2] || '0');
+        sequence = lastSequence + 1;
+      }
+
+      const receiptNo = `REC-${year}${month}-${String(sequence).padStart(4, '0')}`;
+
+      // Create the receipt
+      newReceipt = await prisma.receipt.create({
+        data: {
+          receiptNo,
+          amount: updateData.amount || existingInvoice.amount,
+          paidAt: new Date(),
+          method: paymentMethod || 'transfer', // Use selected payment method
+          notes: paymentNotes || `อัตโนมัติ - ชำระใบแจ้งหนี้ ${existingInvoice.invoiceNo}`,
+          invoiceId: existingInvoice.id,
+          roomId: existingInvoice.roomId,
+          contractId: existingInvoice.contractId,
+          ownerId: payload.userId,
+        },
+      });
+
+      console.log('Auto-created receipt:', newReceipt);
     }
 
     // Update the invoice
@@ -188,7 +233,10 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(updatedInvoice);
+    return NextResponse.json({
+      ...updatedInvoice,
+      newReceipt, // Include the newly created receipt if any
+    });
   } catch (error) {
     console.error('Error updating invoice:', error);
     return NextResponse.json(

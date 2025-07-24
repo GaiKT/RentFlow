@@ -4,6 +4,7 @@ import { useState, useEffect, use } from 'react';
 import { useSession } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { customToast } from '@/lib/toast';
 import { 
   ArrowLeft, 
   FileText, 
@@ -20,7 +21,9 @@ import {
   XCircle,
   Clock,
   AlertTriangle,
-  CreditCard
+  CreditCard,
+  Banknote,
+  Smartphone,
 } from 'lucide-react';
 
 interface Invoice {
@@ -83,12 +86,24 @@ const statusConfig = {
   }
 };
 
+const paymentMethods = [
+  { value: 'cash', label: 'เงินสด', icon: Banknote, color: 'text-success' },
+  { value: 'transfer', label: 'โอนเงิน', icon: CreditCard, color: 'text-info' },
+  { value: 'mobile', label: 'Mobile Banking', icon: Smartphone, color: 'text-warning' },
+  { value: 'other', label: 'อื่นๆ', icon: CreditCard, color: 'text-neutral' }
+];
+
 export default function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { data: session } = useSession();
   const router = useRouter();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  
+  // Payment method selection modal state
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('transfer');
+  const [paymentNotes, setPaymentNotes] = useState('');
 
   // Unwrap params using React.use()
   const { id: invoiceId } = use(params);
@@ -143,7 +158,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
     };
   }, [session?.user, invoiceId]); // ใช้ invoiceId แทน params.id
 
-  const updateInvoiceStatus = async (newStatus: string) => {
+  const updateInvoiceStatus = async (newStatus: string, method?: string, notes?: string) => {
     if (!invoice) return;
     
     setUpdating(true);
@@ -156,7 +171,11 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ 
+          status: newStatus,
+          paymentMethod: method,
+          paymentNotes: notes 
+        }),
       });
 
       if (response.status === 401) {
@@ -166,16 +185,47 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
       }
 
       if (response.ok) {
-        const updatedInvoice = await response.json();
-        setInvoice(updatedInvoice);
+        const data = await response.json();
+        setInvoice(data);
+        
+        // Close modal if open
+        setShowPaymentModal(false);
+        
+        // Show success message and handle receipt creation
+        if (newStatus === 'PAID') {
+          if (data.newReceipt) {
+            // Show success message with receipt info
+            const methodLabel = paymentMethods.find(m => m.value === method)?.label || 'โอนเงิน';
+            customToast.success(
+              `บันทึกการชำระเงินสำเร็จ!\nวิธีชำระ: ${methodLabel}\nสร้างใบเสร็จ ${data.newReceipt.receiptNo} อัตโนมัติแล้ว`
+            );
+          } else {
+            customToast.success('บันทึกการชำระเงินสำเร็จ!');
+          }
+        } else if (newStatus === 'CANCELLED') {
+          customToast.success('ยกเลิกใบแจ้งหนี้เรียบร้อยแล้ว');
+        }
       } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        customToast.error(`เกิดข้อผิดพลาด: ${errorData.error || 'ไม่สามารถอัปเดตสถานะได้'}`);
         console.error('Failed to update invoice status');
       }
     } catch (error) {
       console.error('Error updating invoice status:', error);
+      customToast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     } finally {
       setUpdating(false);
     }
+  };
+
+  const handlePaymentSubmit = () => {
+    updateInvoiceStatus('PAID', selectedPaymentMethod, paymentNotes);
+  };
+
+  const openPaymentModal = () => {
+    setSelectedPaymentMethod('transfer');
+    setPaymentNotes('');
+    setShowPaymentModal(true);
   };
 
   const formatCurrency = (amount: number) => {
@@ -225,7 +275,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
       .catch(error => {
         console.error('Error loading print page:', error);
         printWindow.close();
-        alert('เกิดข้อผิดพลาดในการโหลดหน้าพิมพ์');
+        customToast.error('เกิดข้อผิดพลาดในการโหลดหน้าพิมพ์');
       });
     }
   };
@@ -256,7 +306,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
       }
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      alert('เกิดข้อผิดพลาดในการดาวน์โหลด PDF');
+      customToast.error('เกิดข้อผิดพลาดในการดาวน์โหลด PDF');
     }
   };
 
@@ -564,7 +614,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                     <button
                       className="btn btn-success w-full"
                       disabled={updating}
-                      onClick={() => updateInvoiceStatus('PAID')}
+                      onClick={openPaymentModal}
                     >
                       <CheckCircle className="w-4 h-4" />
                       บันทึกการชำระเงิน
@@ -665,6 +715,102 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
       </div>
+
+      {/* Payment Method Selection Modal */}
+      {showPaymentModal && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-md">
+            <h3 className="font-bold text-lg mb-4">
+              <DollarSign className="w-5 h-5 inline mr-2" />
+              เลือกวิธีการชำระเงิน
+            </h3>
+            
+            <div className="space-y-4">
+              {/* Payment Amount Display */}
+              <div className="bg-base-200 p-4 rounded-lg">
+                <div className="text-sm text-base-content/70">จำนวนเงินที่ชำระ</div>
+                <div className="text-2xl font-bold text-success">
+                  {formatCurrency(invoice?.amount || 0)}
+                </div>
+              </div>
+
+              {/* Payment Method Selection */}
+              <div>
+                <label className="label">
+                  <span className="label-text font-medium">วิธีการชำระ</span>
+                </label>
+                <div className="space-y-2">
+                  {paymentMethods.map((method) => {
+                    const Icon = method.icon;
+                    return (
+                      <label
+                        key={method.value}
+                        className={`flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                          selectedPaymentMethod === method.value
+                            ? 'border-primary bg-primary/10'
+                            : 'border-base-300 hover:border-base-400'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value={method.value}
+                          checked={selectedPaymentMethod === method.value}
+                          onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                          className="radio radio-primary"
+                        />
+                        <Icon className={`w-5 h-5 ${method.color}`} />
+                        <span className="font-medium">{method.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Payment Notes */}
+              <div>
+                <label className="label">
+                  <span className="label-text font-medium">หมายเหตุ (ไม่บังคับ)</span>
+                </label>
+                <textarea
+                  className="textarea textarea-bordered w-full"
+                  placeholder="เช่น เลขที่อ้างอิง, หมายเหตุการชำระ..."
+                  value={paymentNotes}
+                  onChange={(e) => setPaymentNotes(e.target.value)}
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            <div className="modal-action">
+              <button
+                className="btn btn-ghost"
+                onClick={() => setShowPaymentModal(false)}
+                disabled={updating}
+              >
+                ยกเลิก
+              </button>
+              <button
+                className="btn btn-success"
+                onClick={handlePaymentSubmit}
+                disabled={updating}
+              >
+                {updating ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm"></span>
+                    กำลังบันทึก...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    บันทึกการชำระเงิน
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

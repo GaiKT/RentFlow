@@ -1,30 +1,22 @@
 import toast from "react-hot-toast";
-import { 
-  CheckCircle, 
-  AlertCircle, 
-  Info, 
-  XCircle,
-  Upload,
-  Download,
-  Save,
-  Trash2,
-  User,
-  Lock,
-  Mail
-} from "lucide-react";
 
-// Custom toast styles that work with DaisyUI
 export const customToast = {
   success: (message: string, options?: any) => {
     return toast.success(message, {
       icon: '✅',
       style: {
-        background: 'bg-white',
-        color: 'hsl(var(--suc))',
-        border: '1px solid hsl(var(--su))',
-        borderRadius: '0.5rem',
+        background: '#ffffff',
+        color: '#16a34a',
+        border: '1px solid #22c55e',
+        borderRadius: '12px',
         fontWeight: '500',
+        fontSize: '14px',
+        padding: '16px 20px',
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        backdropFilter: 'blur(8px)',
+        maxWidth: '400px',
       },
+      duration: 4000,
       ...options,
     });
   },
@@ -33,12 +25,18 @@ export const customToast = {
     return toast.error(message, {
       icon: '❌',
       style: {
-        background: 'hsl(var(--er))',
-        color: 'hsl(var(--erc))',
-        border: '1px solid hsl(var(--er))',
-        borderRadius: '0.5rem',
+        background: '#ffffff',
+        color: '#dc2626',
+        border: '1px solid #ef4444',
+        borderRadius: '12px',
         fontWeight: '500',
+        fontSize: '14px',
+        padding: '16px 20px',
+        boxShadow: '0 10px 25px -5px rgba(220, 38, 38, 0.1), 0 4px 6px -2px rgba(220, 38, 38, 0.05)',
+        backdropFilter: 'blur(8px)',
+        maxWidth: '400px',
       },
+      duration: 5000,
       ...options,
     });
   },
@@ -47,11 +45,16 @@ export const customToast = {
     return toast.loading(message, {
       icon: '⏳',
       style: {
-        background: 'hsl(var(--in))',
-        color: 'hsl(var(--inc))',
-        border: '1px solid hsl(var(--in))',
-        borderRadius: '0.5rem',
+        background: '#ffffff',
+        color: '#0ea5e9',
+        border: '1px solid #38bdf8',
+        borderRadius: '12px',
         fontWeight: '500',
+        fontSize: '14px',
+        padding: '16px 20px',
+        boxShadow: '0 10px 25px -5px rgba(14, 165, 233, 0.1), 0 4px 6px -2px rgba(14, 165, 233, 0.05)',
+        backdropFilter: 'blur(8px)',
+        maxWidth: '400px',
       },
       ...options,
     });
@@ -61,12 +64,18 @@ export const customToast = {
     return toast(message, {
       icon: 'ℹ️',
       style: {
-        background: 'hsl(var(--in))',
-        color: 'hsl(var(--inc))',
-        border: '1px solid hsl(var(--in))',
-        borderRadius: '0.5rem',
+        background: '#ffffff',
+        color: '#0369a1',
+        border: '1px solid #0ea5e9',
+        borderRadius: '12px',
         fontWeight: '500',
+        fontSize: '14px',
+        padding: '16px 20px',
+        boxShadow: '0 10px 25px -5px rgba(3, 105, 161, 0.1), 0 4px 6px -2px rgba(3, 105, 161, 0.05)',
+        backdropFilter: 'blur(8px)',
+        maxWidth: '400px',
       },
+      duration: 4000,
       ...options,
     });
   },
@@ -75,12 +84,18 @@ export const customToast = {
     return toast(message, {
       icon: '⚠️',
       style: {
-        background: 'hsl(var(--wa))',
-        color: 'hsl(var(--wac))',
-        border: '1px solid hsl(var(--wa))',
-        borderRadius: '0.5rem',
+        background: '#ffffff',
+        color: '#d97706',
+        border: '1px solid #f59e0b',
+        borderRadius: '12px',
         fontWeight: '500',
+        fontSize: '14px',
+        padding: '16px 20px',
+        boxShadow: '0 10px 25px -5px rgba(217, 119, 6, 0.1), 0 4px 6px -2px rgba(217, 119, 6, 0.05)',
+        backdropFilter: 'blur(8px)',
+        maxWidth: '400px',
       },
+      duration: 4500,
       ...options,
     });
   },
@@ -154,30 +169,39 @@ export const customToast = {
       },
       {
         style: {
-          borderRadius: '0.5rem',
+          borderRadius: '12px',
           fontWeight: '500',
+          fontSize: '14px',
+          padding: '16px 20px',
+          backdropFilter: 'blur(8px)',
+          maxWidth: '400px',
         },
         success: {
           style: {
-            background: 'hsl(var(--su))',
-            color: 'hsl(var(--suc))',
-            border: '1px solid hsl(var(--su))',
+            background: '#ffffff',
+            color: '#16a34a',
+            border: '1px solid #22c55e',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
           },
           icon: '✅',
+          duration: 4000,
         },
         error: {
           style: {
-            background: 'hsl(var(--er))',
-            color: 'hsl(var(--erc))',
-            border: '1px solid hsl(var(--er))',
+            background: '#ffffff',
+            color: '#dc2626',
+            border: '1px solid #ef4444',
+            boxShadow: '0 10px 25px -5px rgba(220, 38, 38, 0.1), 0 4px 6px -2px rgba(220, 38, 38, 0.05)',
           },
           icon: '❌',
+          duration: 5000,
         },
         loading: {
           style: {
-            background: 'hsl(var(--in))',
-            color: 'hsl(var(--inc))',
-            border: '1px solid hsl(var(--in))',
+            background: '#ffffff',
+            color: '#0ea5e9',
+            border: '1px solid #38bdf8',
+            boxShadow: '0 10px 25px -5px rgba(14, 165, 233, 0.1), 0 4px 6px -2px rgba(14, 165, 233, 0.05)',
           },
           icon: '⏳',
         },

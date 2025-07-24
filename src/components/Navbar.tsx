@@ -51,7 +51,6 @@ export function Navbar({ user, onLogout }: NavbarProps) {
     { name: "สัญญา", href: "/dashboard/contracts", icon: FileText },
     { name: "ใบแจ้งหนี้", href: "/dashboard/invoices", icon: DollarSign },
     { name: "ใบเสร็จ", href: "/dashboard/receipts", icon: Receipt },
-    { name: "การแจ้งเตือน", href: "/dashboard/notifications", icon: Bell },
   ];
 
   const isActive = (href: string) => {
@@ -68,7 +67,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
         <div className="navbar-start">
           <Link href="/dashboard" className="btn btn-ghost text-xl font-bold text-primary">
             <Building className="w-6 h-6 mr-2" />
-            ระบบจัดการห้องพัก
+            RentFlow
           </Link>
         </div>
 
@@ -159,11 +158,11 @@ export function Navbar({ user, onLogout }: NavbarProps) {
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-base-100 border-b border-base-300 shadow-lg">
-          <ul className="menu menu-vertical p-4">
+          <ul className="menu menu-vertical w-full p-4">
             {navigation.map((item) => {
               const Icon = item.icon;
               return (
-                <li key={item.href}>
+                <li key={item.href} className="w-full">
                   <Link
                     href={item.href}
                     className={`flex items-center gap-3 ${

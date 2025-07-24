@@ -254,7 +254,7 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
 
                   <div>
                     <label className="label">
-                      <span className="label-text font-medium">สถานะ</span>
+                      <span className="label-text font-medium mr-4">สถานะ</span>
                     </label>
                     <div className={`badge ${statusLabels[room.status].color} badge-lg`}>
                       {statusLabels[room.status].label}
@@ -307,7 +307,7 @@ export default function RoomDetailPage({ params }: { params: Promise<{ id: strin
 
                     <div>
                       <label className="label">
-                        <span className="label-text font-medium">สถานะสัญญา</span>
+                        <span className="label-text font-medium mr-4">สถานะสัญญา</span>
                       </label>
                       <div className={`badge ${contractStatusLabels[activeContract.status as keyof typeof contractStatusLabels].color} badge-lg`}>
                         {contractStatusLabels[activeContract.status as keyof typeof contractStatusLabels].label}

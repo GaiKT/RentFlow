@@ -93,39 +93,39 @@ export default function RegisterPage() {
   const currentPasswordStrength = passwordStrength(formData.password);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-300 to-base-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-secondary/5 via-base-100 to-primary/5 flex items-center justify-center p-4">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] opacity-20"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       
       {/* Theme Switcher - Top Right */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-6 right-6">
         <ThemeSwitcher />
       </div>
       
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-lg">
         {/* Back Button */}
         <Link 
           href="/" 
-          className="btn btn-ghost btn-sm mb-4 text-base-content/70 hover:text-base-content"
+          className="btn btn-ghost btn-sm mb-6 text-base-content/70 hover:text-base-content group"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
           กลับสู่หน้าหลัก
         </Link>
 
         {/* Register Card */}
-        <div className="card bg-base-100 shadow-2xl border border-base-300">
+        <div className="card bg-base-100/80 backdrop-blur-sm shadow-2xl border border-base-300/50">
           <div className="card-body p-8">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="avatar mb-4">
-                <div className="w-16 rounded-full bg-gradient-to-r from-secondary to-primary text-white flex items-center justify-center">
-                  <UserPlus className="w-8 h-8" />
-                </div>
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center shadow-lg">
+                <UserPlus className="w-10 h-10 text-white" />
               </div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
-                สมัครสมาชิก
-              </h2>
-              <p className="text-base-content/70 mt-2">
+              <h1 className="text-4xl font-bold mb-2">
+                <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                  สมัครสมาชิก
+                </span>
+              </h1>
+              <p className="text-base-content/60 text-lg">
                 เริ่มต้นจัดการห้องพักของคุณวันนี้
               </p>
             </div>
@@ -133,51 +133,57 @@ export default function RegisterPage() {
             {/* Register Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name Field */}
-              <fieldset>
-                <legend className="fieldset-legend font-medium flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  ชื่อ-นามสกุล
-                </legend>
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold flex items-center gap-2">
+                    <User className="w-4 h-4 text-secondary" />
+                    ชื่อ-นามสกุล
+                  </span>
+                </label>
                 <input
                   type="text"
                   name="name"
-                  placeholder="ชื่อ-นามสกุล"
-                  className="input input-bordered w-full validator focus:input-primary transition-all duration-300"
+                  placeholder="กรอกชื่อ-นามสกุลของคุณ"
+                  className="input input-bordered w-full focus:input-secondary transition-all duration-300 bg-base-200/50"
                   value={formData.name}
                   onChange={handleChange}
                   required
                 />
-              </fieldset>
+              </div>
 
               {/* Email Field */}
-              <fieldset>
-                <legend className="fieldset-legend font-medium flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  อีเมล
-                </legend>
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-secondary" />
+                    อีเมล
+                  </span>
+                </label>
                 <input
                   type="email"
                   name="email"
-                  placeholder="example@email.com"
-                  className="input input-bordered w-full validator focus:input-primary transition-all duration-300"
+                  placeholder="กรอกอีเมลของคุณ"
+                  className="input input-bordered w-full focus:input-secondary transition-all duration-300 bg-base-200/50"
                   value={formData.email}
                   onChange={handleChange}
                   required
                 />
-              </fieldset>
+              </div>
 
               {/* Password Field */}
-              <fieldset>
-                <legend className="fieldset-legend font-medium flex items-center gap-2">
-                  <Lock className="w-4 h-4" />
-                  รหัสผ่าน
-                </legend>
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-secondary" />
+                    รหัสผ่าน
+                  </span>
+                </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)"
-                    className="input input-bordered w-full validator pr-12 focus:input-primary transition-all duration-300"
+                    placeholder="กรอกรหัสผ่าน (อย่างน้อย 6 ตัวอักษร)"
+                    className="input input-bordered w-full pr-12 focus:input-secondary transition-all duration-300 bg-base-200/50"
                     value={formData.password}
                     onChange={handleChange}
                     minLength={6}
@@ -185,7 +191,7 @@ export default function RegisterPage() {
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-base-content/50 hover:text-base-content transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/50 hover:text-secondary transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -194,121 +200,117 @@ export default function RegisterPage() {
                 
                 {/* Password Strength Indicator */}
                 {formData.password && (
-                  <div className="mt-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="text-xs text-base-content/70">ความแข็งแรงของรหัสผ่าน:</div>
-                      <div className={`text-xs font-medium text-${getPasswordStrengthColor(currentPasswordStrength)}`}>
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-base-content/70">ความแข็งแรงของรหัสผ่าน:</span>
+                      <span className={`text-sm font-semibold text-${getPasswordStrengthColor(currentPasswordStrength)}`}>
                         {getPasswordStrengthText(currentPasswordStrength)}
-                      </div>
+                      </span>
                     </div>
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4].map((level) => (
-                        <div
-                          key={level}
-                          className={`h-1 flex-1 rounded ${
-                            level <= currentPasswordStrength 
-                              ? `bg-${getPasswordStrengthColor(currentPasswordStrength)}` 
-                              : 'bg-base-300'
-                          }`}
-                        />
-                      ))}
+                    <progress 
+                      className={`progress progress-${getPasswordStrengthColor(currentPasswordStrength)} w-full h-2`} 
+                      value={currentPasswordStrength} 
+                      max="4"
+                    ></progress>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-base-content/60">
+                      <div className={`flex items-center gap-1 ${formData.password.length >= 8 ? 'text-success' : ''}`}>
+                        {formData.password.length >= 8 ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 rounded-full border border-current opacity-30"></div>}
+                        8+ ตัวอักษร
+                      </div>
+                      <div className={`flex items-center gap-1 ${/[A-Z]/.test(formData.password) ? 'text-success' : ''}`}>
+                        {/[A-Z]/.test(formData.password) ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 rounded-full border border-current opacity-30"></div>}
+                        ตัวใหญ่
+                      </div>
+                      <div className={`flex items-center gap-1 ${/[0-9]/.test(formData.password) ? 'text-success' : ''}`}>
+                        {/[0-9]/.test(formData.password) ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 rounded-full border border-current opacity-30"></div>}
+                        ตัวเลข
+                      </div>
+                      <div className={`flex items-center gap-1 ${/[^A-Za-z0-9]/.test(formData.password) ? 'text-success' : ''}`}>
+                        {/[^A-Za-z0-9]/.test(formData.password) ? <CheckCircle className="w-3 h-3" /> : <div className="w-3 h-3 rounded-full border border-current opacity-30"></div>}
+                        สัญลักษณ์
+                      </div>
                     </div>
                   </div>
                 )}
-              </fieldset>
+              </div>
 
               {/* Confirm Password Field */}
-              <fieldset>
-                <legend className="fieldset-legend font-medium flex items-center gap-2">
-                  <Lock className="w-4 h-4" />
-                  ยืนยันรหัสผ่าน
-                </legend>
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-secondary" />
+                    ยืนยันรหัสผ่าน
+                  </span>
+                </label>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
-                    placeholder="ยืนยันรหัสผ่าน"
-                    className={`input input-bordered w-full validator pr-12 transition-all duration-300 ${
-                      formData.confirmPassword && formData.password !== formData.confirmPassword
-                        ? "input-error"
-                        : formData.confirmPassword && formData.password === formData.confirmPassword
-                        ? "input-success"
-                        : "focus:input-primary"
-                    }`}
+                    placeholder="กรอกรหัสผ่านอีกครั้ง"
+                    className="input input-bordered w-full pr-12 focus:input-secondary transition-all duration-300 bg-base-200/50"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-base-content/50 hover:text-base-content transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-base-content/50 hover:text-secondary transition-colors"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                
-                {/* Password Match Indicator */}
-                {formData.confirmPassword && (
-                  <div className="mt-1">
-                    {formData.password === formData.confirmPassword ? (
-                      <div className="flex items-center gap-1 text-success text-xs">
-                        <CheckCircle className="w-3 h-3" />
-                        รหัสผ่านตรงกัน
-                      </div>
-                    ) : (
-                      <label className="validator-hint text-error text-xs">
-                        รหัสผ่านไม่ตรงกัน
-                      </label>
-                    )}
-                  </div>
+                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">รหัสผ่านไม่ตรงกัน</span>
+                  </label>
                 )}
-              </fieldset>
+              </div>
 
               {/* Register Button */}
-              <div className="mt-8">
-                <button
-                  type="submit"
-                  className={`btn btn-primary btn-lg w-full bg-gradient-to-r from-secondary to-primary border-none hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <span className="loading loading-spinner w-5 h-5"></span>
-                      กำลังสมัครสมาชิก...
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="w-5 h-5 mr-2" />
-                      สมัครสมาชิก
-                    </>
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                className={`btn btn-secondary btn-lg w-full mt-8 bg-gradient-to-r from-secondary to-primary border-none hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${isLoading ? 'loading' : ''}`}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="loading loading-spinner w-5 h-5"></span>
+                    กำลังสมัครสมาชิก...
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="w-5 h-5 mr-2" />
+                    สมัครสมาชิก
+                  </>
+                )}
+              </button>
             </form>
 
             {/* Divider */}
-            <div className="divider my-8 text-base-content/50">หรือ</div>
+            <div className="divider my-8">
+              <span className="text-base-content/40 text-sm">หรือ</span>
+            </div>
 
             {/* Footer Links */}
             <div className="text-center space-y-4">
-              <p className="text-sm text-base-content/70">
-                มีบัญชีแล้ว?{" "}
-                <Link href="/login" className="link link-primary font-medium hover:link-hover">
+              <p className="text-base-content/70">
+                มีบัญชีอยู่แล้ว?{" "}
+                <Link href="/login" className="link link-secondary font-semibold hover:link-hover">
                   เข้าสู่ระบบ
                 </Link>
               </p>
-              <Link href="/" className="link link-secondary text-sm hover:link-hover">
-                กลับสู่หน้าหลัก
-              </Link>
             </div>
           </div>
         </div>
 
-        {/* Terms Notice */}
-        <div className="mt-6 p-4 bg-warning/10 rounded-lg border border-warning/20">
-          <div className="text-center text-sm text-warning">
-            การสมัครสมาชิกถือว่าคุณยอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว
+        {/* Demo Info */}
+        <div className="mt-6 p-4 bg-gradient-to-r from-success/10 to-info/10 rounded-xl border border-success/20 backdrop-blur-sm">
+          <div className="text-center text-sm">
+            <div className="badge badge-success badge-sm mb-2">ฟรี</div>
+            <p className="text-base-content/70">
+              สมัครสมาชิกฟรี ไม่มีค่าใช้จ่ายเพิ่มเติม
+            </p>
           </div>
         </div>
       </div>
