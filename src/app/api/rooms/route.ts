@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+import { ActivityLogService, getRequestMetadata } from "@/lib/activity-log-service";
 
 export async function GET(req: NextRequest) {
   try {
@@ -148,6 +149,24 @@ export async function POST(req: NextRequest) {
         },
       },
     });
+
+    // Log the room creation activity
+    const { ipAddress, userAgent } = getRequestMetadata(req);
+    await ActivityLogService.logRoomAction(
+      decoded.userId,
+      room.id,
+      room.name,
+      'ROOM_CREATE' as any,
+      `สร้างห้องพักใหม่: ${room.name} (ค่าเช่า: ${room.rent} บาท)`,
+      { 
+        rent: room.rent,
+        deposit: room.deposit,
+        address: room.address,
+        description: room.description 
+      },
+      ipAddress,
+      userAgent
+    );
 
     return NextResponse.json({
       message: "สร้างห้องพักสำเร็จ",

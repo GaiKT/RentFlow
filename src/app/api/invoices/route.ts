@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { notifyInvoiceCreated } from '@/lib/notification-service';
+import { createActivityLogger, ACTIVITY_DESCRIPTIONS } from '@/lib/activity-logger';
 
 const prisma = new PrismaClient();
 
@@ -203,6 +204,21 @@ export async function POST(request: NextRequest) {
       dueDate: invoice.dueDate,
       ownerId: payload.userId,
     });
+
+    // Log activity
+    const activityLogger = createActivityLogger(payload.userId, request);
+    await activityLogger.logInvoiceAction(
+      invoice.id,
+      invoice.invoiceNo,
+      'INVOICE_CREATE' as any,
+      ACTIVITY_DESCRIPTIONS.INVOICE_CREATE(invoice.invoiceNo, invoice.amount),
+      {
+        roomName: invoice.room.name,
+        tenantName: invoice.contract?.tenantName,
+        amount: invoice.amount,
+        dueDate: invoice.dueDate,
+      }
+    );
 
     return NextResponse.json(invoice, { status: 201 });
   } catch (error) {

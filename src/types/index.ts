@@ -1,4 +1,4 @@
-import { User, Room, Contract, Document, Invoice, Receipt, Notification } from '@prisma/client'
+import { User, Room, Contract, Document, Invoice, Receipt, Notification, ActivityLog } from '@prisma/client'
 
 export type UserWithRelations = User & {
   rooms?: Room[]
@@ -39,6 +39,15 @@ export type ReceiptWithRelations = Receipt & {
 
 export type NotificationWithRelations = Notification & {
   user?: User
+}
+
+export type ActivityLogWithRelations = ActivityLog & {
+  user?: {
+    id: string
+    name: string
+    email: string
+    profileImage: string | null
+  }
 }
 
 export interface LoginCredentials {
@@ -86,4 +95,27 @@ export interface ReceiptFormData {
   amount: number
   method: string
   notes?: string
+}
+
+// Activity Log types
+export interface ActivityLogCreateData {
+  action: string
+  entity: string
+  entityId: string
+  entityName?: string
+  description: string
+  metadata?: any
+  ipAddress?: string
+  userAgent?: string
+  userId: string
+}
+
+export interface ActivityLogFilters {
+  userId?: string
+  entity?: string
+  action?: string
+  dateFrom?: Date
+  dateTo?: Date
+  limit?: number
+  offset?: number
 }

@@ -30,6 +30,7 @@ model User {
   invoices      Invoice[]
   receipts      Receipt[]
   notifications Notification[]
+  activityLogs  ActivityLog[]
 
   @@map("users")
 }
@@ -196,4 +197,74 @@ enum NotificationType {
   INVOICE_OVERDUE
   ROOM_STATUS_CHANGED
   MONTHLY_REPORT
+}
+
+model ActivityLog {
+  id          String       @id @default(cuid())
+  action      ActivityAction
+  entity      String       // e.g., "room", "contract", "invoice", "receipt", "user"
+  entityId    String       // The ID of the affected entity
+  entityName  String?      // Human-readable name/identifier of the entity
+  description String       // Detailed description of the action
+  metadata    Json?        // Additional structured data about the action
+  ipAddress   String?      // IP address of the user
+  userAgent   String?      // User agent string
+  createdAt   DateTime     @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+enum ActivityAction {
+  // User actions
+  USER_LOGIN
+  USER_LOGOUT
+  USER_REGISTER
+  USER_PROFILE_UPDATE
+  USER_PASSWORD_CHANGE
+  
+  // Room actions
+  ROOM_CREATE
+  ROOM_UPDATE
+  ROOM_DELETE
+  ROOM_STATUS_CHANGE
+  
+  // Contract actions
+  CONTRACT_CREATE
+  CONTRACT_UPDATE
+  CONTRACT_DELETE
+  CONTRACT_TERMINATE
+  CONTRACT_RENEW
+  CONTRACT_DOCUMENT_UPLOAD
+  CONTRACT_DOCUMENT_DOWNLOAD
+  CONTRACT_DOCUMENT_DELETE
+  
+  // Invoice actions
+  INVOICE_CREATE
+  INVOICE_UPDATE
+  INVOICE_DELETE
+  INVOICE_SEND
+  INVOICE_MARK_PAID
+  INVOICE_MARK_OVERDUE
+  INVOICE_PDF_GENERATE
+  INVOICE_PRINT
+  
+  // Receipt actions
+  RECEIPT_CREATE
+  RECEIPT_UPDATE
+  RECEIPT_DELETE
+  RECEIPT_PDF_GENERATE
+  RECEIPT_PRINT
+  
+  // System actions
+  SYSTEM_BACKUP
+  SYSTEM_RESTORE
+  SYSTEM_MAINTENANCE
+  
+  // Notification actions
+  NOTIFICATION_CREATE
+  NOTIFICATION_READ
+  NOTIFICATION_DELETE
 }

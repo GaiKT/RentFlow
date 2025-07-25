@@ -402,8 +402,7 @@ export default function CreateContractPage() {
 
                   {/* Deposit */}
                   <fieldset>
-                    <legend className="fieldset-legend font-medium">เงินมัดจำ (บาท)</legend>
-                    <label className="text-xs text-base-content/70 mb-2 block">ไม่บังคับ</label>
+                    <legend className="fieldset-legend font-medium">เงินมัดจำ (บาท) (optional)</legend>
                     <input
                       type="number"
                       className={`input input-bordered w-full ${errors.deposit ? 'validator input-error' : 'validator'}`}

@@ -323,16 +323,7 @@ export default function InvoicesPage() {
           <div className="stat-value text-success">{stats.paid}</div>
           <div className="stat-desc">ฉบับ</div>
         </div>
-
-        <div className="stat bg-base-100 shadow-lg rounded-lg">
-            <div className="stat-figure text-success">
-              <CheckCircle className="w-8 h-8" />
-            </div>
-            <div className="stat-title">ชำระแล้ว</div>
-            <div className="stat-value text-success">{stats.paid}</div>
-            <div className="stat-desc">ฉบับ</div>
-          </div>
-
+        
           <div className="stat bg-base-100 shadow-lg rounded-lg">
             <div className="stat-figure text-error">
               <AlertTriangle className="w-8 h-8" />

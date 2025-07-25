@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { ActivityLogService, getRequestMetadata } from "@/lib/activity-log-service";
 
 export async function POST(req: NextRequest) {
   try {
@@ -51,6 +52,17 @@ export async function POST(req: NextRequest) {
         createdAt: true,
       },
     });
+
+    // Log the registration activity
+    const { ipAddress, userAgent } = getRequestMetadata(req);
+    await ActivityLogService.logUserAction(
+      user.id,
+      'USER_REGISTER' as any,
+      `ผู้ใช้ ${user.name} สมัครสมาชิกใหม่`,
+      { email: user.email },
+      ipAddress,
+      userAgent
+    );
 
     return NextResponse.json(
       {

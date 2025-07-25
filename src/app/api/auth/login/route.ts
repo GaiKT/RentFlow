@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { comparePassword, generateToken } from "@/lib/auth";
+import { ActivityLogService, getRequestMetadata } from "@/lib/activity-log-service";
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,6 +43,17 @@ export async function POST(req: NextRequest) {
       email: user.email,
       role: user.role,
     });
+
+    // Log the login activity
+    const { ipAddress, userAgent } = getRequestMetadata(req);
+    await ActivityLogService.logUserAction(
+      user.id,
+      'USER_LOGIN' as any,
+      `ผู้ใช้ ${user.name} เข้าสู่ระบบ`,
+      { email: user.email },
+      ipAddress,
+      userAgent
+    );
 
     // Return user data and token
     return NextResponse.json({

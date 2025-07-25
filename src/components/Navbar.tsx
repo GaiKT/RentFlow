@@ -51,6 +51,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
     { name: "สัญญา", href: "/dashboard/contracts", icon: FileText },
     { name: "ใบแจ้งหนี้", href: "/dashboard/invoices", icon: DollarSign },
     { name: "ใบเสร็จ", href: "/dashboard/receipts", icon: Receipt },
+    { name: "บันทึกกิจกรรม", href: "/dashboard/activity-logs", icon: Settings },
   ];
 
   const isActive = (href: string) => {

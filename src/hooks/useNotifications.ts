@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { customToast } from '@/lib/toast';
 
 interface Notification {
   id: string;
@@ -87,9 +88,13 @@ export function useNotifications() {
           ...prev,
           unreadCount: Math.max(0, prev.unreadCount - 1)
         }));
+        customToast.success('ทำเครื่องหมายอ่านแล้ว');
+      } else {
+        customToast.error('เกิดข้อผิดพลาดในการอัปเดต');
       }
     } catch (error) {
       console.error('Error marking notification as read:', error);
+      customToast.error('เกิดข้อผิดพลาดในการอัปเดต');
     }
   }, []);
 
@@ -118,9 +123,13 @@ export function useNotifications() {
           ...prev,
           unreadCount: 0
         }));
+        customToast.success('ทำเครื่องหมายอ่านทั้งหมดแล้ว');
+      } else {
+        customToast.error('เกิดข้อผิดพลาดในการอัปเดต');
       }
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
+      customToast.error('เกิดข้อผิดพลาดในการอัปเดต');
     }
   }, []);
 
@@ -146,9 +155,13 @@ export function useNotifications() {
             ? prev.unreadCount - 1 
             : prev.unreadCount
         }));
+        customToast.success('ลบการแจ้งเตือนแล้ว');
+      } else {
+        customToast.error('เกิดข้อผิดพลาดในการลบ');
       }
     } catch (error) {
       console.error('Error deleting notification:', error);
+      customToast.error('เกิดข้อผิดพลาดในการลบ');
     }
   }, [notifications]);
 

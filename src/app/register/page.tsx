@@ -270,7 +270,7 @@ export default function RegisterPage() {
               {/* Register Button */}
               <button
                 type="submit"
-                className={`btn btn-secondary btn-lg w-full mt-8 bg-gradient-to-r from-secondary to-primary border-none hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${isLoading ? 'loading' : ''}`}
+                className={`btn btn-secondary btn-lg w-full mt-8 bg-gradient-to-r from-secondary to-primary border-none hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5`}
                 disabled={isLoading}
               >
                 {isLoading ? (

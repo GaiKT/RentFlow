@@ -14,6 +14,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useNotifications } from '@/hooks/useNotifications';
+import { customToast } from '@/lib/toast';
 
 const notificationTypeConfig = {
   CONTRACT_EXPIRY: {
@@ -61,7 +62,6 @@ export default function NotificationsPage() {
   } = useNotifications();
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
 
   // Generate notifications manually
   const handleGenerateNotifications = useCallback(async () => {
@@ -86,52 +86,20 @@ export default function NotificationsPage() {
         // รีเฟรชการแจ้งเตือน
         await fetchNotifications();
         
-        // แสดงผลลัพธ์
+        // แสดงผลลัพธ์ด้วย toast
         if (data.total > 0) {
-          alert(`สร้างการแจ้งเตือนใหม่ ${data.total} รายการ`);
+          customToast.success(`สร้างการแจ้งเตือนใหม่ ${data.total} รายการ`);
         } else {
-          alert('ไม่มีการแจ้งเตือนใหม่ที่ต้องสร้าง');
+          customToast.info('ไม่มีการแจ้งเตือนใหม่ที่ต้องสร้าง');
         }
+      } else {
+        customToast.error('เกิดข้อผิดพลาดในการสร้างการแจ้งเตือน');
       }
     } catch (error) {
       console.error('Error generating notifications:', error);
-      alert('เกิดข้อผิดพลาดในการสร้างการแจ้งเตือน');
+      customToast.error('เกิดข้อผิดพลาดในการสร้างการแจ้งเตือน');
     } finally {
       setIsGenerating(false);
-    }
-  }, [router, fetchNotifications]);
-
-  // Test notification system
-  const handleTestNotifications = useCallback(async () => {
-    setIsTesting(true);
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/login");
-        return;
-      }
-
-      // ทดสอบ cron job API
-      const response = await fetch('/api/cron/notifications', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'reminders' })
-      });
-
-      if (response.ok) {
-        await fetchNotifications();
-        alert('ทดสอบระบบแจ้งเตือนเรียบร้อยแล้ว');
-      } else {
-        alert('เกิดข้อผิดพลาดในการทดสอบระบบ');
-      }
-    } catch (error) {
-      console.error('Error testing notifications:', error);
-      alert('เกิดข้อผิดพลาดในการทดสอบระบบ');
-    } finally {
-      setIsTesting(false);
     }
   }, [router, fetchNotifications]);
 
@@ -201,20 +169,7 @@ export default function NotificationsPage() {
             ) : (
               <RefreshCw className="w-4 h-4" />
             )}
-            สร้างการแจ้งเตือน
-          </button>
-          
-          <button 
-            onClick={handleTestNotifications}
-            className="btn btn-outline btn-secondary"
-            disabled={isTesting}
-          >
-            {isTesting ? (
-              <span className="loading loading-spinner loading-sm"></span>
-            ) : (
-              <AlertTriangle className="w-4 h-4" />
-            )}
-            ทดสอบระบบ
+            รีเฟรชการแจ้งเตือน
           </button>
           
           {stats.unreadCount > 0 && (
