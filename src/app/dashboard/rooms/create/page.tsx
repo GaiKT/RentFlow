@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { customToast } from "@/lib/toast";
+import toast from "react-hot-toast";
 import {
   Building,
   Save,
@@ -37,17 +37,17 @@ export default function CreateRoomPage() {
     e.preventDefault();
     
     if (!formData.name || !formData.rent) {
-      customToast.error("กรุณากรอกชื่อห้องและค่าเช่า");
+      toast.error("กรุณากรอกชื่อห้องและค่าเช่า");
       return;
     }
 
     if (parseFloat(formData.rent) <= 0) {
-      customToast.error("ค่าเช่าต้องมากกว่า 0");
+      toast.error("ค่าเช่าต้องมากกว่า 0");
       return;
     }
 
     if (formData.deposit && parseFloat(formData.deposit) < 0) {
-      customToast.error("มัดจำต้องไม่ติดลบ");
+      toast.error("มัดจำต้องไม่ติดลบ");
       return;
     }
 
@@ -78,13 +78,13 @@ export default function CreateRoomPage() {
       const data = await response.json();
 
       if (response.ok) {
-        customToast.success("สร้างห้องพักสำเร็จ");
+        toast.success("สร้างห้องพักสำเร็จ");
         router.push("/dashboard/rooms");
       } else {
-        customToast.error(data.message || "เกิดข้อผิดพลาดในการสร้างห้องพัก");
+        toast.error(data.message || "เกิดข้อผิดพลาดในการสร้างห้องพัก");
       }
     } catch {
-      customToast.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
+      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
     } finally {
       setIsLoading(false);
     }

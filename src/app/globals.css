@@ -191,3 +191,12 @@ html[data-theme="dark"] {
     z-index: 7000;
   }
 }
+
+/* Simple toast animations */
+[data-sonner-toaster] [data-sonner-toast] {
+  transition: all 0.2s ease;
+}
+
+[data-sonner-toaster] [data-sonner-toast]:hover {
+  transform: translateY(-2px);
+}
