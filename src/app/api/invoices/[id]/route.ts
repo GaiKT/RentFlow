@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, InvoiceStatus } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
@@ -22,7 +22,7 @@ function verifyToken(token: string): JWTPayload | null {
 // GET /api/invoices/[id] - ดึงข้อมูลใบแจ้งหนี้ตาม ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -96,7 +96,7 @@ export async function GET(
 // PATCH /api/invoices/[id] - อัปเดตสถานะใบแจ้งหนี้
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -129,10 +129,16 @@ export async function PATCH(
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: {
+      status?: InvoiceStatus;
+      amount?: number;
+      notes?: string | null;
+      dueDate?: Date;
+      description?: string;
+    } = {};
     
     if (status) {
-      updateData.status = status;
+      updateData.status = status as InvoiceStatus;
     }
     
     if (amount !== undefined) {
@@ -249,7 +255,7 @@ export async function PATCH(
 // DELETE /api/invoices/[id] - ลบใบแจ้งหนี้
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization');

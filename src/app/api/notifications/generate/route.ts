@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     // ค้นหาสัญญาที่ใกล้หมดอายุ (30 วัน, 7 วัน, 1 วัน)
     const now = new Date();
     const thirtyDaysLater = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-    const sevenDaysLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const oneDayLater = new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000);
     
     // ค้นหาใบแจ้งหนี้ที่ใกล้ครบกำหนดชำระ
     const upcomingInvoices = await prisma.invoice.findMany({
@@ -31,7 +29,7 @@ export async function POST(request: NextRequest) {
       
       let notificationTitle = '';
       let notificationMessage = '';
-      let notificationType: 'RENT_DUE' = 'RENT_DUE';
+      const notificationType = 'RENT_DUE' as const;
 
       if (daysUntilDue <= 1) {
         notificationTitle = 'ครบกำหนดชำระค่าเช่าวันนี้!';
@@ -93,7 +91,7 @@ export async function POST(request: NextRequest) {
       
       let notificationTitle = '';
       let notificationMessage = '';
-      let notificationType: 'CONTRACT_EXPIRY' = 'CONTRACT_EXPIRY';
+      const notificationType = 'CONTRACT_EXPIRY' as const;
 
       if (daysUntilExpiry <= 1) {
         notificationTitle = 'สัญญาเช่าหมดอายุวันนี้!';

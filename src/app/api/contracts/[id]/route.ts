@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ContractStatus } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
@@ -138,7 +138,7 @@ export async function PUT(
     } = await request.json();
 
     // Validation
-    const errors: any = {};
+    const errors: Record<string, string> = {};
 
     if (tenantName !== undefined && (!tenantName || typeof tenantName !== "string" || tenantName.trim().length === 0)) {
       errors.tenantName = "กรุณากรอกชื่อผู้เช่า";
@@ -193,7 +193,18 @@ export async function PUT(
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: {
+      tenantName?: string;
+      tenantPhone?: string;
+      tenantEmail?: string;
+      startDate?: Date;
+      endDate?: Date;
+      rent?: number;
+      deposit?: number;
+      terms?: string | null;
+      notes?: string | null;
+      status?: ContractStatus;
+    } = {};
     if (tenantName !== undefined) updateData.tenantName = tenantName.trim();
     if (tenantPhone !== undefined) updateData.tenantPhone = tenantPhone.trim();
     if (tenantEmail !== undefined) updateData.tenantEmail = tenantEmail.trim();
@@ -203,7 +214,7 @@ export async function PUT(
     if (deposit !== undefined) updateData.deposit = deposit;
     if (terms !== undefined) updateData.terms = terms?.trim() || null;
     if (notes !== undefined) updateData.notes = notes?.trim() || null;
-    if (status !== undefined) updateData.status = status;
+    if (status !== undefined) updateData.status = status as ContractStatus;
 
     // Update contract
     const contract = await prisma.contract.update({

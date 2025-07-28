@@ -46,7 +46,6 @@ export async function GET(req: NextRequest) {
     const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const currentYear = new Date(now.getFullYear(), 0, 1);
-    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     // Get comprehensive dashboard statistics
     const [

@@ -1,5 +1,5 @@
 import { ActivityLogService, getRequestMetadata } from '@/lib/activity-log-service'
-import { ActivityAction } from '@prisma/client'
+import { ActivityAction, Prisma } from '@prisma/client'
 
 /**
  * Utility class for easy activity logging integration
@@ -21,7 +21,7 @@ export class ActivityLogger {
   async logUserAction(
     action: ActivityAction,
     description: string,
-    metadata?: any
+    metadata?: Prisma.InputJsonValue | null
   ) {
     await ActivityLogService.logUserAction(
       this.userId,
@@ -38,7 +38,7 @@ export class ActivityLogger {
     roomName: string,
     action: ActivityAction,
     description: string,
-    metadata?: any
+    metadata?: Prisma.InputJsonValue | null
   ) {
     await ActivityLogService.logRoomAction(
       this.userId,
@@ -57,7 +57,7 @@ export class ActivityLogger {
     tenantName: string,
     action: ActivityAction,
     description: string,
-    metadata?: any
+    metadata?: Prisma.InputJsonValue | null
   ) {
     await ActivityLogService.logContractAction(
       this.userId,
@@ -76,7 +76,7 @@ export class ActivityLogger {
     invoiceNo: string,
     action: ActivityAction,
     description: string,
-    metadata?: any
+    metadata?: Prisma.InputJsonValue | null
   ) {
     await ActivityLogService.logInvoiceAction(
       this.userId,
@@ -95,7 +95,7 @@ export class ActivityLogger {
     receiptNo: string,
     action: ActivityAction,
     description: string,
-    metadata?: any
+    metadata?: Prisma.InputJsonValue | null
   ) {
     await ActivityLogService.logReceiptAction(
       this.userId,
@@ -115,7 +115,7 @@ export class ActivityLogger {
     entityName: string,
     action: string,
     description: string,
-    metadata?: any
+    metadata?: Prisma.InputJsonValue | null
   ) {
     await ActivityLogService.log({
       action,

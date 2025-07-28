@@ -486,7 +486,7 @@ export default function ReceiptsPage() {
             <select
               className="select select-bordered"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'paidAt' | 'amount')}
             >
               <option value="paidAt">วันที่ชำระ</option>
               <option value="amount">จำนวนเงิน</option>
@@ -496,7 +496,7 @@ export default function ReceiptsPage() {
             <select
               className="select select-bordered"
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as any)}
+              onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
             >
               <option value="desc">ใหม่ไปเก่า</option>
               <option value="asc">เก่าไปใหม่</option>

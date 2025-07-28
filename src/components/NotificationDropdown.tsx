@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/lib/auth-context';
-import { Bell, Check, X, Calendar, DollarSign, FileText, Home, AlertTriangle } from 'lucide-react';
+import { Bell, Check, X } from 'lucide-react';
 import { NotificationTypeLabels } from '@/lib/notification-service';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 

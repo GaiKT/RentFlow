@@ -400,7 +400,7 @@ export default function CreateReceiptPage() {
                               checked={form.method === method.value}
                               onChange={(e) => setForm(prev => ({
                                 ...prev,
-                                method: e.target.value as any
+                                method: e.target.value as 'cash' | 'transfer' | 'cheque' | 'credit_card'
                               }))}
                               className="radio radio-primary radio-sm"
                             />

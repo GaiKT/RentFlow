@@ -1,5 +1,5 @@
 import { prisma } from './prisma'
-import { ActivityAction } from '@prisma/client'
+import { ActivityAction, Prisma } from '@prisma/client'
 import type { ActivityLogCreateData, ActivityLogFilters, ActivityLogWithRelations } from '@/types'
 
 /**
@@ -19,7 +19,7 @@ export class ActivityLogService {
           entityId: data.entityId,
           entityName: data.entityName,
           description: data.description,
-          metadata: data.metadata,
+          metadata: data.metadata ? data.metadata as Prisma.InputJsonValue : undefined,
           ipAddress: data.ipAddress,
           userAgent: data.userAgent,
           userId: data.userId,
@@ -48,7 +48,15 @@ export class ActivityLogService {
       offset = 0,
     } = filters
 
-    const where: any = {}
+    const where: {
+      userId?: string;
+      entity?: string;
+      action?: ActivityAction;
+      createdAt?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = {}
 
     if (userId) where.userId = userId
     if (entity) where.entity = entity
@@ -210,7 +218,7 @@ export class ActivityLogService {
     userId: string,
     action: ActivityAction,
     description: string,
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue | null,
     ipAddress?: string,
     userAgent?: string
   ): Promise<void> {
@@ -232,7 +240,7 @@ export class ActivityLogService {
     roomName: string,
     action: ActivityAction,
     description: string,
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue | null,
     ipAddress?: string,
     userAgent?: string
   ): Promise<void> {
@@ -255,7 +263,7 @@ export class ActivityLogService {
     tenantName: string,
     action: ActivityAction,
     description: string,
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue | null,
     ipAddress?: string,
     userAgent?: string
   ): Promise<void> {
@@ -278,7 +286,7 @@ export class ActivityLogService {
     invoiceNo: string,
     action: ActivityAction,
     description: string,
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue | null,
     ipAddress?: string,
     userAgent?: string
   ): Promise<void> {
@@ -301,7 +309,7 @@ export class ActivityLogService {
     receiptNo: string,
     action: ActivityAction,
     description: string,
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue | null,
     ipAddress?: string,
     userAgent?: string
   ): Promise<void> {

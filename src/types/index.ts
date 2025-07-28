@@ -1,4 +1,4 @@
-import { User, Room, Contract, Document, Invoice, Receipt, Notification, ActivityLog } from '@prisma/client'
+import { User, Room, Contract, Document, Invoice, Receipt, Notification, ActivityLog, Prisma } from '@prisma/client'
 
 export type UserWithRelations = User & {
   rooms?: Room[]
@@ -104,7 +104,7 @@ export interface ActivityLogCreateData {
   entityId: string
   entityName?: string
   description: string
-  metadata?: any
+  metadata?: Prisma.InputJsonValue | null
   ipAddress?: string
   userAgent?: string
   userId: string

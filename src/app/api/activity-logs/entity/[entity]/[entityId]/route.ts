@@ -9,9 +9,10 @@ import { prisma } from '@/lib/prisma'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { entity: string; entityId: string } }
+  { params }: { params: Promise<{ entity: string; entityId: string }> }
 ) {
   try {
+    const { entity, entityId } = await params;
     const authHeader = request.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
@@ -43,7 +44,6 @@ export async function GET(
       );
     }
 
-    const { entity, entityId } = params
     const { searchParams } = new URL(request.url)
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 20
 

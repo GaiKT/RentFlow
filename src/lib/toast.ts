@@ -1,34 +1,34 @@
-import toast from "react-hot-toast";
+import toast, { ToastOptions } from "react-hot-toast";
 
 export const customToast = {
-  success: (message: string, options?: any) => {
+  success: (message: string, options?: ToastOptions) => {
     return toast.success(message, {
       duration: 4000,
       ...options,
     });
   },
 
-  error: (message: string, options?: any) => {
+  error: (message: string, options?: ToastOptions) => {
     return toast.error(message, {
       duration: 6000,
       ...options,
     });
   },
 
-  loading: (message: string, options?: any) => {
+  loading: (message: string, options?: ToastOptions) => {
     return toast.loading(message, {
       ...options,
     });
   },
 
-  info: (message: string, options?: any) => {
+  info: (message: string, options?: ToastOptions) => {
     return toast(message, {
       duration: 4500,
       ...options,
     });
   },
 
-  warning: (message: string, options?: any) => {
+  warning: (message: string, options?: ToastOptions) => {
     return toast(message, {
       duration: 5000,
       ...options,
@@ -74,7 +74,7 @@ export const customToast = {
     }: {
       loading: string;
       success: string | ((data: T) => string);
-      error: string | ((err: any) => string);
+      error: string | ((err: Error) => string);
     }
   ) => {
     return toast.promise(promise, {
@@ -90,7 +90,7 @@ export const customToast = {
       duration,
       style: {
         '--toast-duration': `${duration}ms`,
-      } as any,
+      } as React.CSSProperties,
     });
   },
 

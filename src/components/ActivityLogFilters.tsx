@@ -11,15 +11,14 @@ interface ActivityLogFiltersProps {
 
 export function ActivityLogFilters({ 
   onFiltersChange, 
-  loading = false,
-  showUserFilter = false 
+  loading = false
 }: ActivityLogFiltersProps) {
   const [filters, setFilters] = useState<ActivityLogFilters>({
     limit: 50,
     offset: 0,
   })
 
-  const handleFilterChange = (key: keyof ActivityLogFilters, value: any) => {
+  const handleFilterChange = (key: keyof ActivityLogFilters, value: string | Date | number | undefined) => {
     const newFilters = { ...filters, [key]: value, offset: 0 } // Reset offset when filters change
     setFilters(newFilters)
     onFiltersChange(newFilters)

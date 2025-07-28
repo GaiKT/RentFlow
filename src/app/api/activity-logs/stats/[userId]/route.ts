@@ -9,9 +9,10 @@ import { prisma } from '@/lib/prisma'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params;
     const authHeader = request.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
@@ -42,8 +43,6 @@ export async function GET(
         { status: 401 }
       );
     }
-
-    const { userId } = params
 
     // Check if user has access to the requested stats
     if (user.role !== 'ADMIN' && user.id !== userId) {

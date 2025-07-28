@@ -11,18 +11,11 @@ import {
   FileText,
   Receipt,
   CreditCard,
-  Bell,
-  Settings,
-  Search,
   Plus,
   Calendar,
-  Home,
-  AlertTriangle,
   CheckCircle,
-  XCircle,
   Activity,
 } from "lucide-react";
-import { customToast } from "@/lib/toast";
 import { RevenueChart } from "@/components/Charts";
 
 interface User {
@@ -114,14 +107,6 @@ export default function DashboardPage() {
 
     fetchDashboardData(token);
   }, [router, fetchDashboardData]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    customToast.logoutSuccess();
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
-  };
 
   if (isLoading) {
     return (

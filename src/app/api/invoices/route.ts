@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, InvoiceStatus, ActivityAction } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { notifyInvoiceCreated } from '@/lib/notification-service';
 import { createActivityLogger, ACTIVITY_DESCRIPTIONS } from '@/lib/activity-logger';
@@ -40,13 +40,16 @@ export async function GET(request: NextRequest) {
     const statusParam = searchParams.get('status');
     
     // Build where clause
-    const whereClause: any = {
+    const whereClause: {
+      ownerId: string;
+      status?: InvoiceStatus | { in: InvoiceStatus[] };
+    } = {
       ownerId: payload.userId,
     };
     
     // Add status filter if provided
     if (statusParam) {
-      const statusList = statusParam.split(',').map(s => s.trim());
+      const statusList = statusParam.split(',').map(s => s.trim() as InvoiceStatus);
       if (statusList.length === 1) {
         whereClause.status = statusList[0];
       } else {
@@ -210,7 +213,7 @@ export async function POST(request: NextRequest) {
     await activityLogger.logInvoiceAction(
       invoice.id,
       invoice.invoiceNo,
-      'INVOICE_CREATE' as any,
+      'INVOICE_CREATE' as ActivityAction,
       ACTIVITY_DESCRIPTIONS.INVOICE_CREATE(invoice.invoiceNo, invoice.amount),
       {
         roomName: invoice.room.name,

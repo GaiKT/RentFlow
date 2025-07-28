@@ -234,7 +234,7 @@ export default function EditInvoicePage({ params }: { params: Promise<{ id: stri
             ไม่สามารถแก้ไขได้
           </h3>
           <p className="text-base-content/50 mb-4">
-            สามารถแก้ไขได้เฉพาะใบแจ้งหนี้ที่มีสถานะ "รอชำระ" เท่านั้น
+            สามารถแก้ไขได้เฉพาะใบแจ้งหนี้ที่มีสถานะ &quot;รอชำระ&quot; เท่านั้น
           </p>
           <Link href={`/dashboard/invoices/${invoiceId}`} className="btn btn-primary">
             กลับไปดูรายละเอียด

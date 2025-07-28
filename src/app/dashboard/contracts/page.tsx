@@ -159,8 +159,8 @@ export default function ContractsPage() {
 
     // Apply sorting
     filtered.sort((a, b) => {
-      let aValue: any;
-      let bValue: any;
+      let aValue: string | number | Date;
+      let bValue: string | number | Date;
 
       switch (sortBy) {
         case "tenantName":

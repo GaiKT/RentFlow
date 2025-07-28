@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     // Validation
-    const errors: any = {};
+    const errors: Record<string, string> = {};
 
     if (!roomId || typeof roomId !== "string") {
       errors.roomId = "Room ID is required";
