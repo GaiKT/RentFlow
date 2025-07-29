@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { customToast } from "@/lib/toast";
 import { Eye, EyeOff, UserPlus, Mail, Lock, User, ArrowLeft, CheckCircle } from "lucide-react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import Image from "next/image";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -118,7 +119,7 @@ export default function RegisterPage() {
             {/* Header */}
             <div className="text-center mb-8">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center shadow-lg">
-                <UserPlus className="w-10 h-10 text-white" />
+                <Image src="/icons/insurance.png" alt="RentFlow" width={50} height={50} />
               </div>
               <h1 className="text-4xl font-bold mb-2">
                 <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">

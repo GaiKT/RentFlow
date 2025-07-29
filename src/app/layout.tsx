@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ระบบจัดการห้องเช่า",
-  description: "ระบบจัดการห้องเช่า สัญญาเช่า และการเงิน",
+  title: "RentFlow - ระบบจัดการห้องเช่า",
+  description: "RentFlow - ระบบจัดการห้องเช่า สัญญาเช่า และการเงิน",
 };
 
 export default function RootLayout({

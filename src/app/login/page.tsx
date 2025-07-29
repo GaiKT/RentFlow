@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { customToast } from "@/lib/toast";
+import { useAuth } from "@/lib/auth-context";
 import { Eye, EyeOff, LogIn, Mail, Lock, ArrowLeft } from "lucide-react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,28 +15,27 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { login, user, loading } = useAuth();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/dashboard");
+      return;
+    }
+  }, [user, loading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
+      const success = await login(email, password);
+      
+      if (success) {
         customToast.loginSuccess();
-        router.push("/dashboard");
       } else {
-        customToast.error(data.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
+        customToast.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       }
     } catch {
       customToast.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
@@ -42,6 +43,18 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-base-200">
+        <div className="text-center">
+          <span className="loading loading-spinner loading-lg text-primary"></span>
+          <p className="mt-4 text-base-content/70">กำลังตรวจสอบสิทธิ์...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 flex items-center justify-center p-4">
@@ -69,7 +82,7 @@ export default function LoginPage() {
             {/* Header */}
             <div className="text-center mb-8">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg">
-                <LogIn className="w-10 h-10 text-white" />
+                <Image src="/icons/insurance.png" alt="RentFlow" width={50} height={50} />
               </div>
               <h1 className="text-4xl font-bold mb-2">
                 <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">

@@ -1,29 +1,30 @@
 import Link from "next/link";
-import { Building, FileText, Receipt, Bell, Star, Shield, Clock, Users } from "lucide-react";
+import { Building, FileText, Receipt, Bell, Star, Shield, Clock, Users, Home as HomeIcon, Folder, CreditCard, Settings, Heart, Zap, Target } from "lucide-react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import Image from "next/image";
 
 export default function Home() {
   const features = [
     {
-      icon: <Building className="w-12 h-12" />,
+      icon: <HomeIcon className="w-12 h-12" />,
       title: "จัดการห้องพัก",
       description: "เพิ่ม แก้ไข และจัดการข้อมูลห้องพัก พร้อมติดตามสถานะแบบเรียลไทม์",
       color: "from-blue-500 to-blue-600"
     },
     {
-      icon: <FileText className="w-12 h-12" />,
+      icon: <Folder className="w-12 h-12" />,
       title: "จัดการสัญญา",
       description: "อัปโหลด ดาวน์โหลด และจัดเก็บเอกสารสัญญาแบบดิจิทัลอย่างปลอดภัย",
       color: "from-green-500 to-green-600"
     },
     {
-      icon: <Receipt className="w-12 h-12" />,
+      icon: <CreditCard className="w-12 h-12" />,
       title: "ใบแจ้งหนี้ & ใบเสร็จ",
       description: "สร้างและพิมพ์ใบแจ้งหนี้และใบเสร็จรับเงินอัตโนมัติด้วยเทมเพลตสวยงาม",
       color: "from-orange-500 to-orange-600"
     },
     {
-      icon: <Bell className="w-12 h-12" />,
+      icon: <Settings className="w-12 h-12" />,
       title: "การแจ้งเตือน",
       description: "แจ้งเตือนสัญญาใกล้หมดอายุและถึงเวลาเก็บค่าเช่าแบบอัตโนมัติ",
       color: "from-purple-500 to-purple-600"
@@ -32,17 +33,17 @@ export default function Home() {
 
   const benefits = [
     {
-      icon: <Shield className="w-8 h-8 text-primary" />,
+      icon: <Heart className="w-8 h-8 text-primary" />,
       title: "ความปลอดภัย",
       description: "ข้อมูลของคุณได้รับการป้องกันด้วยระบบรักษาความปลอดภัยระดับสูง"
     },
     {
-      icon: <Clock className="w-8 h-8 text-secondary" />,
+      icon: <Zap className="w-8 h-8 text-secondary" />,
       title: "ประหยัดเวลา",
       description: "ลดเวลาการทำงานด้วยระบบอัตโนมัติและการจัดการที่มีประสิทธิภาพ"
     },
     {
-      icon: <Users className="w-8 h-8 text-accent" />,
+      icon: <Target className="w-8 h-8 text-accent" />,
       title: "ใช้งานง่าย",
       description: "อินเทอร์เฟซที่เข้าใจง่าย เหมาะสำหรับทุกคนไม่ว่าจะมีประสบการณ์หรือไม่"
     },
@@ -54,8 +55,8 @@ export default function Home() {
       <div className="navbar bg-base-100/80 backdrop-blur-md shadow-lg fixed top-0 z-50 border-b border-base-300/50">
         <div className="navbar-start">
           <Link href="/" className="btn btn-ghost text-xl font-bold text-primary">
-            <Building className="w-6 h-6 mr-2" />
-            ระบบจัดการห้องพัก
+            <Image src="/icons/insurance.png" alt="RentFlow" width={30} height={30} />
+            RentFlow
           </Link>
         </div>
         <div className="navbar-end gap-2">

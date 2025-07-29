@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { 
   Home, 
@@ -67,7 +68,7 @@ export function Navbar({ user, onLogout }: NavbarProps) {
       <div className="navbar bg-base-100 shadow-lg border-b border-base-300 sticky top-0 z-[60]">
         <div className="navbar-start">
           <Link href="/dashboard" className="btn btn-ghost text-xl font-bold text-primary">
-            <Building className="w-6 h-6 mr-2" />
+            <Image src="/icons/insurance.png" alt="RentFlow" width={30} height={30} />
             RentFlow
           </Link>
         </div>

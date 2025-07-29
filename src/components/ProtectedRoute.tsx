@@ -2,23 +2,28 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth-context';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { data: session, status } = useSession();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (status !== 'loading' && !session) {
-      router.push('/login');
-    }
-  }, [session, status, router]);
+    // Add a small delay to ensure auth state is stable
+    const timer = setTimeout(() => {
+      if (!loading && !user) {
+        router.push('/login');
+      }
+    }, 50);
 
-  if (status === 'loading') {
+    return () => clearTimeout(timer);
+  }, [user, loading, router]);
+
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-200">
         <div className="text-center">
@@ -29,7 +34,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  if (!session) {
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-200">
         <div className="text-center">

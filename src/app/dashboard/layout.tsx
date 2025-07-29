@@ -2,8 +2,7 @@
 
 import { Navbar } from '@/components/Navbar';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { useSession } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import { customToast } from '@/lib/toast';
 
 export default function DashboardLayout({
@@ -11,23 +10,22 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
     customToast.logoutSuccess();
+    // Small delay to show the toast before redirect
     setTimeout(() => {
-      router.push('/');
-    }, 1000);
+      logout();
+    }, 500);
   };
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-base-200">
-        {session?.user && (
+        {user && (
           <Navbar 
-            user={session.user} 
+            user={user} 
             onLogout={handleLogout}
             notificationCount={0}
           />
