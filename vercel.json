@@ -3,10 +3,5 @@
   "outputDirectory": ".next",
   "devCommand": "next dev --turbopack",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "env": {
-    "DATABASE_URL": "@database-url",
-    "DIRECT_URL": "@direct-url",
-    "JWT_SECRET": "@jwt-secret"
-  }
+  "framework": "nextjs"
 }
