@@ -1,0 +1,21 @@
+{
+  "name": "RentFlow - ระบบจัดการห้องเช่า",
+  "short_name": "RentFlow",
+  "description": "ระบบจัดการห้องเช่า สัญญาเช่า และการเงิน",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/icons/insurance.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/insurance.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -18,6 +18,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "RentFlow - ระบบจัดการห้องเช่า",
   description: "RentFlow - ระบบจัดการห้องเช่า สัญญาเช่า และการเงิน",
+  icons: {
+    icon: [
+      { url: '/icons/insurance.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/icons/insurance.png',
+    shortcut: '/icons/insurance.png',
+  },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
